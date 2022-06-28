@@ -11,7 +11,15 @@ Tatiane Pacheco
 
 
 
+ONE_LINE_COMMENT "##".*\n
+
+MULTI_LINE_COMMENT_BEGIN "/#"
+MULTI_LINE_COMMENT_END "#/"
+
+%x COMMENT	 
+
 %%
+
  /* Reserved words */
 "char"		 { return KW_CHAR; }
 "int"            { return KW_INT; }
@@ -50,8 +58,23 @@ Tatiane Pacheco
 "=="        { return OPERATOR_EQ; }
 "!="        { return OPERATOR_DIF; }
 
+ /* INDENTIFIER */
+[ \t]                           { }
+"\n"                            { ++line; }
 
+[a-zA-Z_]+[a-zA-Z_]*            { return TK_IDENTIFIER; }   // identificadores
+.                               { return TOKEN_ERROR; }
+[-+]?[0-9]+            	        { return LIT_INTEGER; }     // tipo literal inteiro
+'[^']'                          { return LIT_CHAR; }        // tipo literal caracter
+[-+]*[0-9]*+"."+[0-9]*          { return LIT_FLOAT; }       // tipo literal float
+\"[^\"]*\"                      { return LIT_STRING; }      // tipo literal strig
 
+{ONE_LINE_COMMENT}	        { }
+{MULTI_LINE_COMMENT_BEGIN} 	{ BEGIN(COMMENT); }
+
+<COMMENT>.	{ }
+<COMMENT>"\n"	{ }
+<COMMENT>{MULTI_LINE_COMMENT_END} { BEGIN(INITIAL); }
 
 %%
 /* c-code */

@@ -8,6 +8,14 @@ int yylex_destroy(void);
 int main (int argc, char **argv)
 {
   int token = 0;
+  if(argc < 2)
+{
+  fprintf(stderr, "Call ./a.out file_name\n");
+  exit(1);
+}
+
+yyin = fopen(argv[1],"r");
+
   while (token = yylex()) {
     switch (token){
 		case ';':
