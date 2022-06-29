@@ -11,9 +11,10 @@ Tatiana Pacheco de Almeida - 00252861 */
 	#include "hash.c"
 	
     int line = 1;
+    int running =1;
 %}
 
-
+%option yylineno
 
 ONE_LINE_COMMENT "##".*\n
 
@@ -36,22 +37,22 @@ MULTI_LINE_COMMENT_END "#/"
 "return" 	     { return KW_RETURN; }
 
  
-";"         { return ';'; } //Special characters
-"("	        { return '('; }
-")"	        { return ')'; }
-"["         { return '['; }
-"]"         { return ']'; }
-"{"         { return '{'; }
-"}"         { return '}'; }
-"+"         { return '+'; }
-"-"         { return '-'; }
-"."         { return '.'; }
-"/"         { return '/'; }
-"<"         { return '<'; }
-">"         { return '>'; }
-"&"         { return '&'; }
-"|"         { return '|'; }
-"~"	        { return '~'; }
+";"         { return yytext[0]; } //Special characters
+"("	        { return yytext[0]; }
+")"	        { return yytext[0]; }
+"["         { return yytext[0]; }
+"]"         { return yytext[0]; }
+"{"         { return yytext[0]; }
+"}"         { return yytext[0]; }
+"+"         { return yytext[0]; }
+"-"         { return yytext[0]; }
+"."         { return yytext[0]; }
+"/"         { return yytext[0]; }
+"<"         { return yytext[0]; }
+">"         { return yytext[0]; }
+"&"         { return yytext[0]; }
+"|"         { return yytext[0]; }
+"~"	        { return yytext[0]; }
 
 
 "<-"	    { return ASSIGNMENT; } // Complex operators 
@@ -63,8 +64,8 @@ MULTI_LINE_COMMENT_END "#/"
 
 
 [ \t]+                          { }
-\n                              { ++line; }
-\r 								{ ++line; }
+\n                              { line++; }
+
 
 [a-zA-Z_]+[a-zA-Z_]*            { hashInsert(yytext, TK_IDENTIFIER ); return TK_IDENTIFIER ; }   // Identifier  
 [0-9]+            	            { hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER; }  //Literals   
@@ -87,10 +88,17 @@ MULTI_LINE_COMMENT_END "#/"
 
 
 
-int get_line_number(void) {            // c-code
-    return yylineno;
+int getLineNumber(void) {            // c-code
+    if(line!=1)
+      yylineno--;
+     return yylineno;
+}
+
+int isRunning(){
+    return running;
 }
 
 int yywrap(void) {
+	running = 0;
 	return 1;
 } 

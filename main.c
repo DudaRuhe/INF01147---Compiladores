@@ -66,6 +66,7 @@ hashInit();
   }
 	
 hashPrint();
+printf("O arquivo possui %d linhas \n", getLineNumber());
 yylex_destroy();
 return 0;
   
