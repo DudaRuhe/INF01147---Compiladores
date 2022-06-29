@@ -1009,18 +1009,18 @@ case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
 #line 72 "scanner.l"
-{ return LIT_CHAR; }        
+{ hashInsert(yytext, LIT_CHAR); return LIT_CHAR; }        
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 73 "scanner.l"
-{ return LIT_FLOAT; }       
+{ hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT; }       
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
 #line 74 "scanner.l"
-{ return LIT_STRING; }      
+{ hashInsert(yytext, LIT_STRING); return LIT_STRING; }      
 	YY_BREAK
 case 38:
 /* rule 38 can match eol */
