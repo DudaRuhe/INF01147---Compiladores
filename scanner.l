@@ -11,10 +11,9 @@ Tatiana Pacheco de Almeida - 00252861 */
 	#include "hash.c"
 	
     int line = 1;
-    int running =1;
 %}
 
-%option yylineno
+
 
 ONE_LINE_COMMENT "##".*\n
 
@@ -37,22 +36,22 @@ MULTI_LINE_COMMENT_END "#/"
 "return" 	     { return KW_RETURN; }
 
  
-";"         { return yytext[0]; } //Special characters
-"("	        { return yytext[0]; }
-")"	        { return yytext[0]; }
-"["         { return yytext[0]; }
-"]"         { return yytext[0]; }
-"{"         { return yytext[0]; }
-"}"         { return yytext[0]; }
-"+"         { return yytext[0]; }
-"-"         { return yytext[0]; }
-"."         { return yytext[0]; }
-"/"         { return yytext[0]; }
-"<"         { return yytext[0]; }
-">"         { return yytext[0]; }
-"&"         { return yytext[0]; }
-"|"         { return yytext[0]; }
-"~"	        { return yytext[0]; }
+";"         { return ';'; } //Special characters
+"("	        { return '('; }
+")"	        { return ')'; }
+"["         { return '['; }
+"]"         { return ']'; }
+"{"         { return '{'; }
+"}"         { return '}'; }
+"+"         { return '+'; }
+"-"         { return '-'; }
+"."         { return '.'; }
+"/"         { return '/'; }
+"<"         { return '<'; }
+">"         { return '>'; }
+"&"         { return '&'; }
+"|"         { return '|'; }
+"~"	        { return '~'; }
 
 
 "<-"	    { return ASSIGNMENT; } // Complex operators 
@@ -63,15 +62,16 @@ MULTI_LINE_COMMENT_END "#/"
 
 
 
-[ \t]+                          { }
-\n                              { line++; }
+[ \t]+                         { }
+\n                              { ++line; }
+\r								{ ++line; }
 
 
 [a-zA-Z_]+[a-zA-Z_]*            { hashInsert(yytext, TK_IDENTIFIER ); return TK_IDENTIFIER ; }   // Identifier  
 [0-9]+            	            { hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER; }  //Literals   
-'[^']'                          { hashInsert(yytext, LIT_CHAR); return LIT_CHAR; }        
-[-+]*[0-9]*+"."+[0-9]*          { hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT; }       
-\"[^\"]*\"                      { hashInsert(yytext, LIT_STRING); return LIT_STRING; }      
+'[^']'                          { return LIT_CHAR; }        
+[-+]*[0-9]*+"."+[0-9]*          { return LIT_FLOAT; }       
+ \"(\\.|[^\\”])*\"              { return LIT_STRING; }      
 
 
 
@@ -88,17 +88,10 @@ MULTI_LINE_COMMENT_END "#/"
 
 
 
-int getLineNumber(void) {            // c-code
-    if(line!=1)
-      yylineno--;
-     return yylineno;
-}
-
-int isRunning(){
-    return running;
+int get_line_number(void) {            // c-code
+    return yylineno;
 }
 
 int yywrap(void) {
-	running = 0;
 	return 1;
 } 
