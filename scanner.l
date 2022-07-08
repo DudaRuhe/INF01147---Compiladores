@@ -71,7 +71,7 @@ MULTI_LINE_COMMENT_END "#/"
 [0-9]+            	            { hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER; }  //Literals   
 '[^']'                          { hashInsert(yytext, LIT_CHAR); return LIT_CHAR; }        
 [-+]*[0-9]*+"."+[0-9]*          { hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT; }       
-\"[^\"]*\"                      { hashInsert(yytext, LIT_STRING); return LIT_STRING; }      
+\"([^\\\"\n]|\\.)*\"            { hashInsert(yytext, LIT_STRING); return LIT_STRING; }      
 
 
 
