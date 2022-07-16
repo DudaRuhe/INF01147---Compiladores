@@ -1,2 +1,7 @@
-1
-2
+char c ('x');
+char d (100);
+int a ('A');
+int i(1);
+float f (2,5);
+int matrix[10];
+float cd[23] 'a' 0 1,3;

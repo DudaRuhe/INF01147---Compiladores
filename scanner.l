@@ -70,7 +70,7 @@ MULTI_LINE_COMMENT_END "#/"
 [a-zA-Z_]+[a-zA-Z_]*            { hashInsert(yytext, TK_IDENTIFIER ); return TK_IDENTIFIER ; }   // Identifier  
 [0-9]+            	        { hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER; }  //Literals   
 '[^']'                          { hashInsert(yytext, LIT_CHAR); return LIT_CHAR; }        
-[-+]*[0-9]*+"."+[0-9]*          { hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT; }       
+[-+]*[0-9]*+","+[0-9]*          { hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT; }       
 \"(\\.|[^\\"])*\"               { hashInsert(yytext, LIT_STRING); return LIT_STRING; }      
 
 

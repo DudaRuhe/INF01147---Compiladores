@@ -47,8 +47,24 @@ extern int yylineno;
 
 %%
 
+programa:  variaveis_globais programa |
+	;
 
-exemplo: LIT_INTEGER 
+variaveis: LIT_INTEGER |
+	LIT_FLOAT |
+	LIT_CHAR 
+	;
+tipos_primitivos: KW_CHAR |
+	KW_INT |
+	KW_FLOAT 
+	;
+variaveis_list: variaveis variaveis_list|
+	;
+vetor: TK_IDENTIFIER'['LIT_INTEGER']' variaveis_list ';'
+	;
+
+variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' |
+	tipos_primitivos vetor
 	;
 %%                  //c-code
 
