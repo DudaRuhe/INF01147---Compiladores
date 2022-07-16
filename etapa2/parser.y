@@ -1,13 +1,12 @@
-/*Alunas:
-Maria Eduarda Nothen Ruhe - 00287686
-Tatiana Pacheco de Almeida - 00252861 */
-
-
-/* Defs */
 %{
-    #include <stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
 
+int yylex(void);
+void yyerror (char const *s);
+extern int yylineno;
 %}
+%error-verbose
 
 %token KW_CHAR           
 %token KW_INT            
@@ -32,7 +31,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 %token LIT_FLOAT        
 %token LIT_CHAR          
 %token LIT_STRING        
-%token TOKEN_ERROR       
+%token TOKEN_ERROR
 
 
 
@@ -40,6 +39,13 @@ Tatiana Pacheco de Almeida - 00252861 */
 %%
 
 
+exemplo: LIT_INTEGER 
+	;
 %%
 
+void yyerror (char const *s)
+{
+    printf("[Line %d] %s\n", yylineno, s);
+    exit(3);
+}
 

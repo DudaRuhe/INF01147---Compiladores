@@ -5,10 +5,11 @@ Tatiana Pacheco de Almeida - 00252861 */
 
 /* Defs */
 %{
-    #include "tokens.h"
-	#include "hash.h"
+    #include "y.tab.h"
+    #include "hash.h"
     #include "main.c"
-	#include "hash.c"
+    #include "y.tab.h"
+    #include "hash.c"
 	
     int line = 1;
     int running =1;
