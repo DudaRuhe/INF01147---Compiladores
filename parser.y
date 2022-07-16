@@ -48,24 +48,57 @@ extern int yylineno;
 %%
 
 programa:  variaveis_globais programa |
+	comando programa |
+	
 	;
 
 variaveis: LIT_INTEGER |
-	LIT_FLOAT |
-	LIT_CHAR 
+	LIT_CHAR |
+	LIT_FLOAT 
 	;
+
 tipos_primitivos: KW_CHAR |
-	KW_INT |
-	KW_FLOAT 
+	KW_INT | 
+	KW_FLOAT
 	;
-variaveis_list: variaveis variaveis_list|
+
+variaveis_list: variaveis variaveis_list| 
 	;
-vetor: TK_IDENTIFIER'['LIT_INTEGER']' variaveis_list ';'
+
+vetor: TK_IDENTIFIER'['LIT_INTEGER']' variaveis_list 
 	;
 
 variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' |
-	tipos_primitivos vetor
+	tipos_primitivos vetor ';' 
 	;
+//Comandos Simples
+expressao:  LIT_INTEGER |
+	'(' LIT_INTEGER '+' TK_IDENTIFIER ')'
+	;
+comando: command_print |
+	command_read |
+	command_return |
+	command_atribuicao
+	;
+
+lista_print: LIT_STRING lista_print |
+	 expressao lista_print |
+	;
+	
+command_print: KW_PRINT lista_print
+	;
+
+command_read: KW_READ TK_IDENTIFIER|
+	KW_READ TK_IDENTIFIER'['expressao']'
+	;
+
+command_return: KW_RETURN expressao
+	;
+
+command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao |
+	TK_IDENTIFIER ASSIGNMENT expressao
+	;
+
 %%                  //c-code
 
 void yyerror (char const *s)

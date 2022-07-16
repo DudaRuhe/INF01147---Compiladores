@@ -4,4 +4,15 @@ int a ('A');
 int i(1);
 float f (2,5);
 int matrix[10];
-float cd[23] 'a' 0 1,3;
+char cd[23] 'a' 0 1;
+return 9
+return (2+a)
+print "asdasdasd"
+print "asdasdasd" (2+a)
+print "asddsfdfss" (2+a) " asdasdffrwe"
+read a
+read b[4]
+read c[(2+a)]
+matrix[(3+b)] <- 2
+a <- (3+c)
+a <- 3
