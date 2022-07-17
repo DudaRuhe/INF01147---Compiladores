@@ -22,13 +22,15 @@ int fi() {
 }
 float fii(int z float x char c){
 
+print "asdsad";
+{{{}}}
 
-
-
+{return 2;}
+a <- (a+2);
 
 }
 char fiii(int v int n int m){
-read a;
+read a
 }
 
-a / b;
+
