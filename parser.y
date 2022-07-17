@@ -58,6 +58,8 @@ programa: variaveis_globais programa |
         fluxo programa |
 	;
 
+/* Variaveis Globais */
+
 variaveis: LIT_INTEGER |
 	LIT_CHAR |
 	LIT_FLOAT 
@@ -77,7 +79,8 @@ vetor: TK_IDENTIFIER'['LIT_INTEGER']' variaveis_list
 variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' |
 	tipos_primitivos vetor ';' 
 	;
-//Comandos Simples
+
+/* Comandos Simples */
 
 comando: command_print |
 	 command_read |
@@ -103,21 +106,27 @@ command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao |
 	TK_IDENTIFIER ASSIGNMENT expressao
 	;
 
-//Funções
+/* Funções */
 
 funcao_entrada: tipos_primitivos TK_IDENTIFIER funcao_entrada |
 	;
 
-funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')' '{' bloco '}'
+funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')'  bloco 
+	;
+/* Blocos de Comando */
+
+bloco: '{'comando'}' |
+	'{' bloco_list '}'
 	;
 
-bloco: comando';' bloco |  // bloco de comandos
-	;
+bloco_list: comando ';' bloco_list |              
+	'{' bloco_list '}' bloco_list |
+	fluxo ';' bloco_list |
+	; 
 	
-//controle de fluxo
-fluxo: TK_IDENTIFIER '=' expressao
-	| TK_IDENTIFIER '[' expressao ']' '=' expressao
-        | KW_IF '(' expressao ')' bloco
+/* Controle de Fluxo */
+
+fluxo:  KW_IF '(' expressao ')' bloco
 	| KW_IF '(' expressao ')' bloco KW_ELSE bloco
 	| KW_WHILE '(' expressao ')' bloco
 
