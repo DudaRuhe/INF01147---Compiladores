@@ -6,6 +6,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 /* Defs */
 
 %{
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -35,22 +36,25 @@ extern int yylineno;
 
 %token TK_IDENTIFIER     
 
-%token LIT_INTEGER      
+%token LIT_INTEGER    
 %token LIT_FLOAT        
 %token LIT_CHAR          
 %token LIT_STRING        
 %token TOKEN_ERROR
 
-
-%left '+' '-'  // remover conflitos
-%left '*' '/'  // remover conflitos
+// remover conflitos
+//precedência de baixo para cima
+%left '&' '|'
+%left OPERATOR_EQ OPERATOR_DIF OPERATOR_LE OPERATOR_GE  '<' '>'
+%left '+' '-'  
+%left '*' '/'  
+%left '~'
 
 %%
 
-programa:  variaveis_globais programa |
-	comando programa | 
+programa: variaveis_globais programa |
+	comando programa| 
 	funcao programa |
-	
 	;
 
 variaveis: LIT_INTEGER |
@@ -109,8 +113,32 @@ funcao_entrada: tipos_primitivos TK_IDENTIFIER funcao_entrada |
 funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')' '{' bloco '}'
 	;
 
-bloco: comando';' bloco|
+bloco: comando';' bloco |
 	;
+	
+
+/* Expressoes Aritmeticas*/
+  
+expressao: 
+    TK_IDENTIFIER
+    | variaveis
+    | expressao '+' expressao
+    | expressao '-' expressao
+    | expressao '.' expressao
+    | expressao '*' expressao
+    | expressao '/' expressao
+    | expressao '>' expressao
+    | expressao '<' expressao
+    | expressao '|' expressao
+    | expressao '~' expressao
+    | expressao '&' expressao
+    | expressao OPERATOR_EQ expressao    // ==
+    | expressao OPERATOR_DIF expressao   // =!
+    | expressao OPERATOR_LE expressao    // <=
+    | expressao OPERATOR_GE expressao    // >=
+    | '(' expressao ')'
+    | 
+    ;
 
 %%                  //c-code
 

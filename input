@@ -16,8 +16,9 @@ read c[(2+a)]
 matrix[(3+b)] <- 2
 a <- (3+c)
 a <- 3
+b <- 3
 
-int fi(){
+int fi() {
 }
 float fii(int z float x char c){
 
@@ -29,3 +30,5 @@ float fii(int z float x char c){
 char fiii(int v int n int m){
 read a;
 }
+
+a / b;
