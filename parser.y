@@ -6,6 +6,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 /* Defs */
 
 %{
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -35,23 +36,27 @@ extern int yylineno;
 
 %token TK_IDENTIFIER     
 
-%token LIT_INTEGER      
+%token LIT_INTEGER    
 %token LIT_FLOAT        
 %token LIT_CHAR          
 %token LIT_STRING        
 %token TOKEN_ERROR
 
-
-%left '+' '-'  // remover conflitos
-%left '*' '/'  // remover conflitos
+// remover conflitos
+//precedência de baixo para cima
+%left '&' '|'
+%left OPERATOR_EQ OPERATOR_DIF OPERATOR_LE OPERATOR_GE  '<' '>'
+%left '+' '-'  
+%left '*' '/'  
+%left '~'
 
 %%
 
-programa:  variaveis_globais programa |
-	comando programa | 
+programa: variaveis_globais programa |
+	comando programa| 
 	funcao programa |
-	
 	;
+/* Variaveis Globais */
 
 variaveis: LIT_INTEGER |
 	LIT_CHAR |
@@ -72,11 +77,9 @@ vetor: TK_IDENTIFIER'['LIT_INTEGER']' variaveis_list
 variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' |
 	tipos_primitivos vetor ';' 
 	;
-//Comandos Simples
+/* Comandos Simples */
 
-expressao:  LIT_INTEGER |
-	'(' LIT_INTEGER '+' TK_IDENTIFIER ')'
-	;
+
 comando: command_print |
 	command_read |
 	command_return |
@@ -101,16 +104,45 @@ command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao |
 	TK_IDENTIFIER ASSIGNMENT expressao
 	;
 
-//Funções
+/* Funções */
 
 funcao_entrada: tipos_primitivos TK_IDENTIFIER funcao_entrada |
 	;
 
-funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')' '{' bloco '}'
+funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')' bloco 
+	;
+/* Bloco de funções */
+
+bloco: '{'comando'}' |
+	'{' bloco_list '}'
 	;
 
-bloco: comando';' bloco|
-	;
+bloco_list: comando ';' bloco_list |             //Colocar while, if e ifelse como opçoes 
+	'{' bloco_list '}' bloco_list |
+	; 
+	
+/* Expressoes Aritmeticas*/
+  
+expressao: 
+    TK_IDENTIFIER
+    | variaveis
+    | expressao '+' expressao
+    | expressao '-' expressao
+    | expressao '.' expressao
+    | expressao '*' expressao
+    | expressao '/' expressao
+    | expressao '>' expressao
+    | expressao '<' expressao
+    | expressao '|' expressao
+    | expressao '~' expressao
+    | expressao '&' expressao
+    | expressao OPERATOR_EQ expressao    // ==
+    | expressao OPERATOR_DIF expressao   // =!
+    | expressao OPERATOR_LE expressao    // <=
+    | expressao OPERATOR_GE expressao    // >=
+    | '(' expressao ')'
+    | 
+    ;
 
 %%                  //c-code
 
