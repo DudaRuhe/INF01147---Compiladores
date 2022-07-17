@@ -1,4 +1,3 @@
-
 /*Alunas:
 Maria Eduarda Nothen Ruhe - 00287686
 Tatiana Pacheco de Almeida - 00252861 */
@@ -6,6 +5,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 /* Defs */
 
 %{
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -35,22 +35,27 @@ extern int yylineno;
 
 %token TK_IDENTIFIER     
 
-%token LIT_INTEGER      
+%token LIT_INTEGER    
 %token LIT_FLOAT        
 %token LIT_CHAR          
 %token LIT_STRING        
 %token TOKEN_ERROR
 
-
-%left '+' '-'  // remover conflitos
-%left '*' '/'  // remover conflitos
+// remover conflitos
+//precedência de baixo para cima
+%left '&' '|'
+%left OPERATOR_EQ OPERATOR_DIF OPERATOR_LE OPERATOR_GE  '<' '>'
+%left '+' '-'  
+%left '*' '/'  
+%left '~'
 
 %%
 
-programa:  variaveis_globais programa |
-	comando programa | 
+programa: variaveis_globais programa |
+	comando programa| 
 	funcao programa |
-	
+        expressao programa |
+        fluxo programa |
 	;
 
 variaveis: LIT_INTEGER |
@@ -74,14 +79,11 @@ variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' |
 	;
 //Comandos Simples
 
-expressao:  LIT_INTEGER |
-	'(' LIT_INTEGER '+' TK_IDENTIFIER ')'
-	;
 comando: command_print |
-	command_read |
-	command_return |
-	command_atribuicao
-	;
+	 command_read |
+	 command_return |
+	 command_atribuicao
+      	;
 
 lista_print: LIT_STRING lista_print |
 	 expressao lista_print |
@@ -109,10 +111,54 @@ funcao_entrada: tipos_primitivos TK_IDENTIFIER funcao_entrada |
 funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')' '{' bloco '}'
 	;
 
-bloco: comando';' bloco|
+bloco: comando';' bloco |  // bloco de comandos
 	;
+	
+//controle de fluxo
+fluxo: TK_IDENTIFIER '=' expressao
+	| TK_IDENTIFIER '[' expressao ']' '=' expressao
+        | KW_IF '(' expressao ')' bloco
+	| KW_IF '(' expressao ')' bloco KW_ELSE bloco
+	| KW_WHILE '(' expressao ')' bloco
 
-%%                  //c-code
+
+
+/* Expressoes Aritmeticas*/
+  
+expressao: TK_IDENTIFIER
+    | TK_IDENTIFIER '[' expressao ']' 
+    | LIT_INTEGER 
+    | LIT_CHAR 
+    | expressao '+' expressao
+    | expressao '-' expressao
+    | expressao '.' expressao
+    | expressao '*' expressao
+    | expressao '/' expressao
+    | expressao '>' expressao
+    | expressao '<' expressao
+    | expressao '|' expressao
+    | expressao '~' expressao
+    | expressao '&' expressao
+    | expressao OPERATOR_EQ expressao    // ==
+    | expressao OPERATOR_DIF expressao   // =!
+    | expressao OPERATOR_LE expressao    // <=
+    | expressao OPERATOR_GE expressao    // >=
+    | '(' expressao ')'
+    | chama_funcao
+    ;
+
+chama_funcao: TK_IDENTIFIER '(' argumentos ')'
+    ;
+
+argumentos: expressao lista
+    ;
+
+lista: ',' argumentos
+    |
+    ;
+
+%%                  
+//c-code
 
 void yyerror (char const *s)
 {
