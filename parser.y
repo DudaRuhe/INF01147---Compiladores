@@ -48,7 +48,8 @@ extern int yylineno;
 %%
 
 programa:  variaveis_globais programa |
-	comando programa |
+	comando programa | 
+	funcao programa |
 	
 	;
 
@@ -72,6 +73,7 @@ variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' |
 	tipos_primitivos vetor ';' 
 	;
 //Comandos Simples
+
 expressao:  LIT_INTEGER |
 	'(' LIT_INTEGER '+' TK_IDENTIFIER ')'
 	;
@@ -97,6 +99,17 @@ command_return: KW_RETURN expressao
 
 command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao |
 	TK_IDENTIFIER ASSIGNMENT expressao
+	;
+
+//Funções
+
+funcao_entrada: tipos_primitivos TK_IDENTIFIER funcao_entrada |
+	;
+
+funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')' '{' bloco '}'
+	;
+
+bloco: comando';' bloco|
 	;
 
 %%                  //c-code
