@@ -1,4 +1,3 @@
-
 /*Alunas:
 Maria Eduarda Nothen Ruhe - 00287686
 Tatiana Pacheco de Almeida - 00252861 */
@@ -55,7 +54,11 @@ extern int yylineno;
 programa: variaveis_globais programa |
 	comando programa| 
 	funcao programa |
+        expressao programa |
+        fluxo programa | 
+	bloco |
 	;
+
 /* Variaveis Globais */
 
 variaveis: LIT_INTEGER |
@@ -77,14 +80,14 @@ vetor: TK_IDENTIFIER'['LIT_INTEGER']' variaveis_list
 variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' |
 	tipos_primitivos vetor ';' 
 	;
+
 /* Comandos Simples */
 
-
 comando: command_print |
-	command_read |
-	command_return |
-	command_atribuicao
-	;
+	 command_read |
+	 command_return |
+	 command_atribuicao
+      	;
 
 lista_print: LIT_STRING lista_print |
 	 expressao lista_print |
@@ -109,23 +112,33 @@ command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao |
 funcao_entrada: tipos_primitivos TK_IDENTIFIER funcao_entrada |
 	;
 
-funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')' bloco 
+funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')'  bloco 
 	;
-/* Bloco de funções */
+/* Blocos de Comando */
 
 bloco: '{'comando'}' |
 	'{' bloco_list '}'
 	;
 
-bloco_list: comando ';' bloco_list |             //Colocar while, if e ifelse como opçoes 
+bloco_list: comando ';' bloco_list |              
 	'{' bloco_list '}' bloco_list |
+	fluxo ';' bloco_list |
 	; 
 	
+/* Controle de Fluxo */
+
+fluxo:  KW_IF '(' expressao ')' bloco
+	| KW_IF '(' expressao ')' bloco KW_ELSE bloco
+	| KW_WHILE '(' expressao ')' bloco
+
+
+
 /* Expressoes Aritmeticas*/
   
-expressao: 
-    TK_IDENTIFIER
-    | variaveis
+expressao: TK_IDENTIFIER
+    | TK_IDENTIFIER '[' expressao ']' 
+    | LIT_INTEGER 
+    | LIT_CHAR 
     | expressao '+' expressao
     | expressao '-' expressao
     | expressao '.' expressao
@@ -141,10 +154,19 @@ expressao:
     | expressao OPERATOR_LE expressao    // <=
     | expressao OPERATOR_GE expressao    // >=
     | '(' expressao ')'
-    | 
+    | chama_funcao
     ;
 
-%%                  //c-code
+chama_funcao: TK_IDENTIFIER '(' argumentos ')'
+    ;
+
+argumentos: expressao argumentos |
+    ;
+
+
+
+%%                  
+//c-code
 
 void yyerror (char const *s)
 {

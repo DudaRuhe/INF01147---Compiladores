@@ -15,22 +15,43 @@ read b[4]
 read c[(2+a)]
 matrix[(3+b)] <- 2
 a <- (3+c)
-a <- 3
+a <- 3 + 3
 b <- 3
 
 int fi() {
 }
+
 float fii(int z float x char c){
 
-print "asdsad";
-{{{}}}
+if(a<b){
+print "a"
+};
 
-{return 2;}
-a <- (a+2);
+if(b>a){
+print "a";
+print "b";
+a <-iif();
+b <- asd(w 2 e);
+
+}else{
+return c;
+};
+
+while(b==a){
+print "j";
+};
 
 }
 char fiii(int v int n int m){
-read a
+read a;
 }
-
-
+(a*1) + 1
+1 - (a *b)
+3 * 1
+4 + 9
+8 - 1
+a + b
+##comentario
+/# coiasda
+varia linhas 123231 if(asdas{asda}}}
+#/
