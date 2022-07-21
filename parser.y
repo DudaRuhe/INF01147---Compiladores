@@ -46,17 +46,13 @@ extern int yylineno;
 %left '&' '|'
 %left OPERATOR_EQ OPERATOR_DIF OPERATOR_LE OPERATOR_GE  '<' '>'
 %left '+' '-'  
-%left '*' '/'  
+%left '.' '/'  
 %left '~'
 
 %%
 
 programa: variaveis_globais programa |
-	comando programa| 
 	funcao programa |
-        expressao programa |
-        fluxo programa | 
-	bloco |
 	;
 
 /* Variaveis Globais */
@@ -86,8 +82,11 @@ variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' |
 comando: command_print |
 	 command_read |
 	 command_return |
-	 command_atribuicao
-      	;
+	 command_atribuicao |
+	 bloco |
+	 fluxo | 
+	';' 	 
+      	 ;
 
 lista_print: LIT_STRING lista_print |
 	 expressao lista_print |
@@ -116,20 +115,17 @@ funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')'  bloco
 	;
 /* Blocos de Comando */
 
-bloco: '{'comando'}' |
-	'{' bloco_list '}'
+bloco: '{'bloco_list'}' 
 	;
 
-bloco_list: comando ';' bloco_list |              
-	'{' bloco_list '}' bloco_list |
-	fluxo ';' bloco_list |
+bloco_list: comando bloco_list |            
 	; 
 	
 /* Controle de Fluxo */
 
-fluxo:  KW_IF '(' expressao ')' bloco
-	| KW_IF '(' expressao ')' bloco KW_ELSE bloco
-	| KW_WHILE '(' expressao ')' bloco
+fluxo:  KW_IF '(' expressao ')' comando
+	| KW_IF '(' expressao ')' comando KW_ELSE comando
+	| KW_WHILE '(' expressao ')' comando
 
 
 
@@ -142,7 +138,6 @@ expressao: TK_IDENTIFIER
     | expressao '+' expressao
     | expressao '-' expressao
     | expressao '.' expressao
-    | expressao '*' expressao
     | expressao '/' expressao
     | expressao '>' expressao
     | expressao '<' expressao
@@ -173,4 +168,3 @@ void yyerror (char const *s)
     printf("[Line %d] %s\n", yylineno, s);
     exit(3);
 }
- 
