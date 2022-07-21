@@ -47,7 +47,6 @@ MULTI_LINE_COMMENT_END "#/"
 "+"         { return yytext[0]; }
 "-"         { return yytext[0]; }
 "."         { return yytext[0]; }
-"*"         { return yytext[0]; }
 "/"         { return yytext[0]; }
 "<"         { return yytext[0]; }
 ">"         { return yytext[0]; }
