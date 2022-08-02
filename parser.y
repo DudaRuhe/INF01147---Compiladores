@@ -41,13 +41,13 @@ extern int yylineno;
 
 %token TK_IDENTIFIER     
 
-%token<value> LIT_INTEGER    
-%token<value> LIT_FLOAT        
-%token<value> LIT_CHAR          
+%token LIT_INTEGER    
+%token LIT_FLOAT        
+%token LIT_CHAR          
 %token LIT_STRING        
 %token TOKEN_ERROR
 
-%type<value> expressao
+
 // remover conflitos
 //precedência de baixo para cima
 %left '&' '|'
@@ -110,7 +110,7 @@ command_return: KW_RETURN expressao
 	;
 
 command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao |
-	TK_IDENTIFIER ASSIGNMENT expressao  			{fprintf(stderr, "Expre vale %d\n", $3);}
+	TK_IDENTIFIER ASSIGNMENT expressao  			
 	;
 
 /* Funções */
@@ -138,14 +138,14 @@ fluxo:  KW_IF '(' expressao ')' comando
 
 /* Expressoes Aritmeticas*/
   
-expressao: TK_IDENTIFIER		{$$ = 0;}
-    | TK_IDENTIFIER '[' expressao ']'   {$$ = 0;}
-    | LIT_INTEGER 			{fprintf(stderr, "Recebi %d\n",$1);}
-    | LIT_CHAR 				{$$ = 0;}
-    | expressao '+' expressao		{$$ = $1 + $3;}
-    | expressao '-' expressao		{$$ = $1 - $3;}
-    | expressao '.' expressao		{$$ = $1 * $3;}
-    | expressao '/' expressao		{$$ = $1 / $3;}
+expressao: TK_IDENTIFIER		
+    | TK_IDENTIFIER '[' expressao ']'   
+    | LIT_INTEGER 			
+    | LIT_CHAR 				
+    | expressao '+' expressao		
+    | expressao '-' expressao		
+    | expressao '.' expressao		
+    | expressao '/' expressao		
     | expressao '>' expressao		
     | expressao '<' expressao		
     | expressao '|' expressao		
@@ -155,8 +155,8 @@ expressao: TK_IDENTIFIER		{$$ = 0;}
     | expressao OPERATOR_DIF expressao   // =!
     | expressao OPERATOR_LE expressao    // <=
     | expressao OPERATOR_GE expressao    // >=
-    | '(' expressao ')'                 {$$ = $2;}
-    | chama_funcao			{$$ = 0;}
+    | '(' expressao ')'                 
+    | chama_funcao			
     ;
 
 chama_funcao: TK_IDENTIFIER '(' argumentos ')'
