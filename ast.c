@@ -10,7 +10,8 @@ Tatiana Pacheco de Almeida - 00252861 */
 AST* ast_create (int type, HASH_NODE* symbol, AST* son0, AST* son1, AST* son2, AST* son3){
 	
 	
-	AST*newnode;//newnode=(AST*) calloc (1, sizeof(AST));
+	AST*newnode;
+	newnode=(AST*) calloc (1, sizeof(AST));
 	newnode->type = type;
 	newnode->symbol =symbol;
 	newnode->son[0] = son0;
@@ -23,28 +24,28 @@ AST* ast_create (int type, HASH_NODE* symbol, AST* son0, AST* son1, AST* son2, A
 
 void ast_print(AST* node, int level){
 
-	int i;
+	int i=0;
 	if (!node) return;
 
 	for (i=0; i<level; i++)
-	fprintf(stderr, " ");
+	fprintf(stderr, "  ");
 
 	fprintf(stderr, "AST(");
 
 	switch (node->type){
 		case AST_SYMBOL: fprintf(stderr, "AST_SYMBOL"); break;
 		case AST_ADD: fprintf(stderr, "AST_ADD"); break;
-		case AST_SUB: fprintf(stderr, "AST_SUB"); break;
+		//case AST_SUB: fprintf(stderr, "AST_SUB"); break;
+		//case AST_: fprintf(stderr, "AST_SUB"); break;
 
 		default: fprintf(stderr,"AST_UNKNOW"); break;
 	} 
 	if (node->symbol !=0)
-		fprintf(stderr, ",%s", node->symbol->text);
+		fprintf(stderr, ",%s\n", node->symbol->text);
 	else
-		fprintf(stderr, ",0");
+		fprintf(stderr, ",0\n");
 
 	for (i=0; i<MAXSON; i++)
-	ast_print(node->son[i], level +1);
-	
+		ast_print(node->son[i], level +1);
 
 }

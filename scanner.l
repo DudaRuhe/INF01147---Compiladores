@@ -6,6 +6,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 /* Defs */
 %{
    #include "hash.h"
+   #include "ast.h"
    #include "y.tab.h"
   
 	

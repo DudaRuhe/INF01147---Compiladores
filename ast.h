@@ -11,7 +11,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 #define AST_SYMBOL 1
 #define AST_ADD 2 
 #define AST_IF 3
-#define  AST_SUB 4
+
 
 typedef struct ast_node
 {

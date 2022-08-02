@@ -6,6 +6,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 
 %{
 #include "hash.h"
+#include "ast.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -18,6 +19,7 @@ extern int yylineno;
 {
    int value;
    HASH_NODE *symbol;
+   AST *ast
 }
 
 %error-verbose
@@ -47,6 +49,9 @@ extern int yylineno;
 %token LIT_STRING        
 %token TOKEN_ERROR
 
+//%type<ast> expressao
+//%type<ast> command_atribuicao
+//%type<ast> bloco_list
 
 // remover conflitos
 //precedência de baixo para cima
@@ -109,8 +114,8 @@ command_read: KW_READ TK_IDENTIFIER|
 command_return: KW_RETURN expressao
 	;
 
-command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao |
-	TK_IDENTIFIER ASSIGNMENT expressao  			
+command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao //{ $$ = astCreat(AST_ATTR,$1,$3,0,0,0);} 
+	| TK_IDENTIFIER ASSIGNMENT expressao  		//{ $$ = astCreat(AST_ATTR,$1,$3,0,0,0);} 
 	;
 
 /* Funções */
@@ -122,10 +127,11 @@ funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')'  bloco
 	;
 /* Blocos de Comando */
 
-bloco: '{'bloco_list'}' 
+bloco: '{'bloco_list'}'// {ast_print($2,0);}
 	;
 
-bloco_list: comando bloco_list |            
+bloco_list: comando bloco_list //{ $$ = astCreat(AST_LCMD,0,$1,$2,0,0); }
+            | 		       //{ $$ = 0; }
 	; 
 	
 /* Controle de Fluxo */
@@ -138,14 +144,14 @@ fluxo:  KW_IF '(' expressao ')' comando
 
 /* Expressoes Aritmeticas*/
   
-expressao: TK_IDENTIFIER		
+expressao: TK_IDENTIFIER		//{$$ = astCreat(AST_SYMBOL,$1,0,0,0,0); }
     | TK_IDENTIFIER '[' expressao ']'   
-    | LIT_INTEGER 			
+    | LIT_INTEGER 			//{$$ = astCreat(AST_SYMBOL,$1,0,0,0,0); }		
     | LIT_CHAR 				
-    | expressao '+' expressao		
-    | expressao '-' expressao		
-    | expressao '.' expressao		
-    | expressao '/' expressao		
+    | expressao '+' expressao		//{$$ = astCreat(AST_ADD,0,$1,$3,0,0); }
+    | expressao '-' expressao		//{$$ = astCreat(AST_SUB,0,$1,$3,0,0); }
+    | expressao '.' expressao		//{$$ = astCreat(AST_MULT,0,$1,$3,0,0); }
+    | expressao '/' expressao		//{$$ = astCreat(AST_DIV,0,$1,$3,0,0); }
     | expressao '>' expressao		
     | expressao '<' expressao		
     | expressao '|' expressao		
@@ -155,14 +161,12 @@ expressao: TK_IDENTIFIER
     | expressao OPERATOR_DIF expressao   // =!
     | expressao OPERATOR_LE expressao    // <=
     | expressao OPERATOR_GE expressao    // >=
-    | '(' expressao ')'                 
-    | chama_funcao			
+    | '(' expressao ')'        		//{$$ = $2; }         
+    | TK_IDENTIFIER '(' argumentos')'			
     ;
 
-chama_funcao: TK_IDENTIFIER '(' argumentos ')'
-    ;
-
-argumentos: expressao argumentos |
+argumentos: expressao argumentos 
+	|
     ;
 
 
