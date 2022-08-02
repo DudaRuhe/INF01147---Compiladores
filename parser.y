@@ -13,11 +13,12 @@ Tatiana Pacheco de Almeida - 00252861 */
 int yylex(void);
 void yyerror (char const *s);
 extern int yylineno;
+
+AST *astRoot;
 %}
 
 %union
 {
-
    HASH_NODE *symbol;
    AST *ast;
 }
@@ -83,7 +84,7 @@ extern int yylineno;
 
 %%
 
-begin: programa {ast_print($1,0);}
+begin: programa {astRoot = $1; ast_print($1,0);}
 ;
 
 programa: variaveis_globais programa  {$$ = astCreat(AST_PROG_VAR,0,$1,$2,0,0); }
@@ -206,4 +207,8 @@ void yyerror (char const *s)
 {
     printf("[Line %d] %s\n", yylineno, s);
     exit(3);
+}
+
+AST* getAST(){
+    return astRoot;
 }

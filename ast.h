@@ -3,6 +3,8 @@ Maria Eduarda Nothen Ruhe - 00287686
 Tatiana Pacheco de Almeida - 00252861 */
 
 #include "hash.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #ifndef AST_HEADER
 #define AST_HEADER
@@ -53,7 +55,7 @@ typedef struct ast_node
 
 AST *astCreat(int type, HASH_NODE *symbol, AST* son0, AST* son1, AST* son2, AST* son3);
 void ast_print(AST* node, int level);
-
+void astToFile(AST* node, FILE *f, int level);
 
 
 

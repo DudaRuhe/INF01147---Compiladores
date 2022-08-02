@@ -94,13 +94,12 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 19 "parser.y" /* yacc.c:1909  */
-
+#line 21 "parser.y" /* yacc.c:1909  */
 
    HASH_NODE *symbol;
    AST *ast;
 
-#line 104 "y.tab.h" /* yacc.c:1909  */
+#line 103 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
