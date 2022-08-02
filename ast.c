@@ -66,7 +66,8 @@ void ast_print(AST* node, int level){
 		case AST_IFELSE: fprintf(stderr, "AST_IFELSE"); break;
 		case AST_WHILE: fprintf(stderr, "AST_WHILE"); break;
 		case AST_PARENTESES: fprintf(stderr, "AST_PARENTESES"); break;
-		case AST_PROG: fprintf(stderr, "AST_PROG"); break;
+		case AST_PROG_VAR: fprintf(stderr, "AST_PROG_VAR"); break;
+		case AST_PROG_FUN: fprintf(stderr, "AST_PROG_FUN"); break;
 
 		default: fprintf(stderr,"AST_UNKNOW"); break;
 	} 

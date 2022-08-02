@@ -86,8 +86,8 @@ extern int yylineno;
 begin: programa {ast_print($1,0);}
 ;
 
-programa: variaveis_globais programa  {$$ = astCreat(AST_PROG,0,$1,$2,0,0); }
-	| funcao programa 	      {$$ = astCreat(AST_PROG,0,$1,$2,0,0); }
+programa: variaveis_globais programa  {$$ = astCreat(AST_PROG_VAR,0,$1,$2,0,0); }
+	| funcao programa 	      {$$ = astCreat(AST_PROG_FUN,0,$1,$2,0,0); }
 	| 			      {$$ = 0;}	
 	;
 

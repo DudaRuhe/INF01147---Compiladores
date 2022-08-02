@@ -41,7 +41,8 @@ Tatiana Pacheco de Almeida - 00252861 */
 #define AST_IFELSE 33
 #define AST_WHILE 34
 #define AST_PARENTESES 35
-#define AST_PROG 36
+#define AST_PROG_VAR 36
+#define AST_PROG_FUN 37
 
 typedef struct ast_node
 {
