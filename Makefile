@@ -1,7 +1,7 @@
 # Maria Eduarda Nothen Ruhe - 00287686
 # Tatiana Pacheco de Almeida - 00252861
 
-etapa3: main.o lex.yy.o y.tab.o hash.o
+etapa3: main.o lex.yy.o y.tab.o hash.o ast.o
 	gcc main.o lex.yy.o y.tab.o hash.o -o etapa3
 
 main.o: main.c
@@ -9,6 +9,9 @@ main.o: main.c
 
 hash.o: hash.c
 	gcc -c hash.c
+
+ast.o: ast.c
+	gcc -c ast.c
 
 y.tab.o: y.tab.c
 	gcc -c y.tab.c
