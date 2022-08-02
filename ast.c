@@ -51,6 +51,22 @@ void ast_print(AST* node, int level){
 		case AST_GE: fprintf(stderr, "AST_GE"); break;
 		case AST_FUN: fprintf(stderr, "AST_FUN"); break;
 		case AST_ARG: fprintf(stderr, "AST_ARG"); break;
+		case AST_LCMD: fprintf(stderr, "AST_LCMD"); break;
+		case AST_CMD: fprintf(stderr, "AST_CMD"); break;
+		case AST_RETURN: fprintf(stderr, "AST_RETURN"); break;
+		case AST_READ: fprintf(stderr, "AST_READ"); break;
+		case AST_PRINT: fprintf(stderr, "AST_PRINT"); break;
+		case AST_PRINTL: fprintf(stderr, "AST_PRINTL"); break;
+		case AST_SYMBOLL: fprintf(stderr, "AST_SYMBOLL"); break;
+		case AST_VAR: fprintf(stderr, "AST_VAR"); break;
+		case AST_VETOR: fprintf(stderr, "AST_VETOR"); break;
+		case AST_FUNATR: fprintf(stderr, "AST_FUNATR"); break;
+		case AST_FUNCAO: fprintf(stderr, "AST_FUNCAO"); break;
+		case AST_IF: fprintf(stderr, "AST_IF"); break;
+		case AST_IFELSE: fprintf(stderr, "AST_IFELSE"); break;
+		case AST_WHILE: fprintf(stderr, "AST_WHILE"); break;
+		case AST_PARENTESES: fprintf(stderr, "AST_PARENTESES"); break;
+		case AST_PROG: fprintf(stderr, "AST_PROG"); break;
 
 		default: fprintf(stderr,"AST_UNKNOW"); break;
 	} 

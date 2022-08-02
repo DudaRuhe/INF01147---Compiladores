@@ -27,6 +27,21 @@ Tatiana Pacheco de Almeida - 00252861 */
 #define AST_GE 18
 #define AST_FUN 19
 #define AST_ARG 20
+#define AST_CMD 21
+#define AST_LCMD 22
+#define AST_RETURN 23
+#define AST_READ 24
+#define AST_PRINT 25
+#define AST_PRINTL 26
+#define AST_SYMBOLL 27
+#define AST_VAR 28
+#define AST_VETOR 29
+#define AST_FUNATR 30 
+#define AST_FUNCAO 31
+#define AST_IFELSE 33
+#define AST_WHILE 34
+#define AST_PARENTESES 35
+#define AST_PROG 36
 
 typedef struct ast_node
 {
