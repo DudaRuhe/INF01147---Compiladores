@@ -44,7 +44,7 @@ hashPrint();
 printf("O arquivo possui %d linhas \n", getLineNumber());
 astToFile(getAST(), outputFile, 0);
 yylex_destroy();
-
+fclose(outputFile);
 return 0;
   
 }
