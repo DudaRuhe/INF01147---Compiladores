@@ -7,7 +7,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 #include "ast.h"
 
 
-AST* ast_create (int type, HASH_NODE* symbol, AST* son0, AST* son1, AST* son2, AST* son3){
+AST* astCreat(int type, HASH_NODE* symbol, AST* son0, AST* son1, AST* son2, AST* son3){
 	
 	
 	AST*newnode;
@@ -35,8 +35,22 @@ void ast_print(AST* node, int level){
 	switch (node->type){
 		case AST_SYMBOL: fprintf(stderr, "AST_SYMBOL"); break;
 		case AST_ADD: fprintf(stderr, "AST_ADD"); break;
-		//case AST_SUB: fprintf(stderr, "AST_SUB"); break;
-		//case AST_: fprintf(stderr, "AST_SUB"); break;
+		case AST_SUB: fprintf(stderr, "AST_SUB"); break;
+		case AST_MULT: fprintf(stderr, "AST_MULT"); break;
+		case AST_DIV: fprintf(stderr, "AST_DIV"); break;
+		case AST_ATTR: fprintf(stderr, "AST_ATTR"); break;
+		case AST_VECTOR: fprintf(stderr, "AST_VECTOR"); break;
+		case AST_GREATER: fprintf(stderr, "AST_GREATER"); break;
+		case AST_LESS: fprintf(stderr, "AST_LESS"); break;
+		case AST_OR: fprintf(stderr, "AST_OR"); break;
+		case AST_NEG: fprintf(stderr, "AST_NEG"); break;
+		case AST_AND: fprintf(stderr, "AST_AND"); break;
+		case AST_EQ: fprintf(stderr, "AST_EQ"); break;
+		case AST_DIF: fprintf(stderr, "AST_DIF"); break;
+		case AST_LE: fprintf(stderr, "AST_LE"); break;
+		case AST_GE: fprintf(stderr, "AST_GE"); break;
+		case AST_FUN: fprintf(stderr, "AST_FUN"); break;
+		case AST_ARG: fprintf(stderr, "AST_ARG"); break;
 
 		default: fprintf(stderr,"AST_UNKNOW"); break;
 	} 

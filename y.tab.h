@@ -96,9 +96,9 @@ union YYSTYPE
 {
 #line 19 "parser.y" /* yacc.c:1909  */
 
-   int value;
+
    HASH_NODE *symbol;
-   AST *ast
+   AST *ast;
 
 #line 104 "y.tab.h" /* yacc.c:1909  */
 };

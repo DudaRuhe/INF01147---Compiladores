@@ -2,7 +2,7 @@
 # Tatiana Pacheco de Almeida - 00252861
 
 etapa3: main.o lex.yy.o y.tab.o hash.o ast.o
-	gcc main.o lex.yy.o y.tab.o hash.o -o etapa3
+	gcc main.o lex.yy.o y.tab.o hash.o ast.c -o etapa3
 
 main.o: main.c
 	gcc -c main.c
