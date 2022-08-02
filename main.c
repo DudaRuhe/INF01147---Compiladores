@@ -3,7 +3,11 @@ Maria Eduarda Nothen Ruhe - 00287686
 Tatiana Pacheco de Almeida - 00252861 */
 
 #include <stdio.h>
-#include "y.tab.c"
+#include <stdlib.h>
+#include "hash.h"
+
+extern FILE *yyin;
+int yyparse();
 
 int yylex(void);
 int yylex_destroy(void);
