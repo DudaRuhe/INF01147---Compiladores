@@ -109,10 +109,10 @@ variaveis_list: variaveis variaveis_list {$$ = astCreat(AST_SYMBOLL,0,$1,$2,0,0)
 	| 				 { $$ = 0; }
 	;
 
-vetor: TK_IDENTIFIER'['LIT_INTEGER']' variaveis_list {$$ = astCreat(AST_VETOR,$1,$5,0,0,0); }
+vetor: TK_IDENTIFIER'['LIT_INTEGER']' variaveis_list {$$ = astCreat(AST_VETOR,$1,$3,$5,0,0); }
 	;
 
-variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' {$$ = astCreat(AST_VAR,$2,$4,0,0,0); }
+variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' {$$ = astCreat(AST_VAR,$1,$2,$4,0,0); }
 	| tipos_primitivos vetor ';' {$$ = $2;} 
 	;
 
@@ -162,7 +162,7 @@ bloco: '{'bloco_list'}' { $$ = astCreat(AST_CMD,0,$2,0,0,0);  }
 bloco_list: comando bloco_tail  { $$ = astCreat(AST_LCMD,0,$1,$2,0,0);  }
 	; 
 
-bloco_tail: ';' comando bloco_tail
+bloco_tail: ';' comando bloco_tail { $$ = astCreat(AST_TAIL,$2,$3,0,0); }
          |
         ;
 
