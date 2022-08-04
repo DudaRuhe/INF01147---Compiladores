@@ -124,7 +124,7 @@ comando:  command_print  	{$$ = $1; }
 	 | command_atribuicao	{$$ = $1; }
 	 | bloco 		{$$ = $1; }
 	 | fluxo 		{$$ = $1; } 
-	 | ';' 			{$$ = 0;} 
+	 |   			{$$ = 0;} 
       	 ;
 
 lista_print: LIT_STRING lista_print { $$ = astCreat(AST_PRINTL,$1,$2,0,0,0); } 
@@ -159,16 +159,19 @@ funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')'  bloco { $$ = astC
 bloco: '{'bloco_list'}' { $$ = astCreat(AST_CMD,0,$2,0,0,0);  }
 	;
 
-bloco_list: comando bloco_list  { $$ = astCreat(AST_LCMD,0,$1,$2,0,0);  }
-            | 		        { $$ = 0; }
+bloco_list: comando bloco_tail  { $$ = astCreat(AST_LCMD,0,$1,$2,0,0);  }
 	; 
-	
+
+bloco_tail: ';' comando bloco_tail
+         |
+        ;
+
 /* Controle de Fluxo */
 
 fluxo:  KW_IF '(' expressao ')' comando			{ $$ = astCreat(AST_IF,0,$3,$5,0,0);  }
 	| KW_IF '(' expressao ')' comando KW_ELSE comando  { $$ = astCreat(AST_IFELSE,0,$3,$5,0,0);  }
 	| KW_WHILE '(' expressao ')' comando		{ $$ = astCreat(AST_WHILE,0,$3,$5,0,0);  }
-
+        ;
 
 
 /* Expressoes Aritmeticas*/
