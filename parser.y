@@ -51,11 +51,13 @@ AST *astRoot;
 %token TOKEN_ERROR
 
 
+
 %type<ast> expressao
 %type<ast> command_atribuicao
 %type<ast> argumentos
 %type<ast> bloco
 %type<ast> bloco_list
+%type<ast> bloco_tail
 %type<ast> comando
 %type<ast> command_return
 %type<ast> command_read
@@ -66,13 +68,14 @@ AST *astRoot;
 %type<ast> variaveis
 %type<ast> variaveis_list
 %type<ast> variaveis_globais
-%type<ast> vetor
+%type<ast> tipos_primitivos
 
 %type<ast> funcao
 %type<ast> funcao_entrada
 
 %type<ast> programa
 %type<ast> begin
+
 
 // remover conflitos
 //precedência de baixo para cima
@@ -100,20 +103,20 @@ variaveis: LIT_INTEGER {$$ = astCreat(AST_SYMBOL,$1,0,0,0,0); }
 	| LIT_FLOAT    {$$ = astCreat(AST_SYMBOL,$1,0,0,0,0); }
 	;
 
-tipos_primitivos: KW_CHAR
-	| KW_INT  
-	| KW_FLOAT
+tipos_primitivos: KW_CHAR	{$$ = astCreat(AST_CHAR,0,0,0,0,0); }
+	| KW_INT  		{$$ = astCreat(AST_INT,0,0,0,0,0); }
+	| KW_FLOAT		{$$ = astCreat(AST_FLOAT,0,0,0,0,0); }
 	;
 
 variaveis_list: variaveis variaveis_list {$$ = astCreat(AST_SYMBOLL,0,$1,$2,0,0); }
 	| 				 { $$ = 0; }
 	;
 
-vetor: TK_IDENTIFIER'['LIT_INTEGER']' variaveis_list {$$ = astCreat(AST_VETOR,$1,$3,$5,0,0); }
-	;
+//vetor: TK_IDENTIFIER'['LIT_INTEGER']' variaveis_list {$$ = astCreat(AST_VETOR,$1,$3,$5,0,0); }
+	//;
 
-variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' {$$ = astCreat(AST_VAR,$1,$2,$4,0,0); }
-	| tipos_primitivos vetor ';' {$$ = $2;} 
+variaveis_globais: tipos_primitivos TK_IDENTIFIER '('variaveis')' ';' {$$ = astCreat(AST_VAR,$2,$1,$4,0,0); }
+	| tipos_primitivos  TK_IDENTIFIER'['LIT_INTEGER']' variaveis_list  ';' {$$ = astCreat(AST_VETOR,$2,$1,astCreat(AST_SYMBOL,$4,0,0,0,0),$6,0); } 
 	;
 
 /* Comandos Simples */
@@ -162,8 +165,8 @@ bloco: '{'bloco_list'}' { $$ = astCreat(AST_CMD,0,$2,0,0,0);  }
 bloco_list: comando bloco_tail  { $$ = astCreat(AST_LCMD,0,$1,$2,0,0);  }
 	; 
 
-bloco_tail: ';' comando bloco_tail { $$ = astCreat(AST_TAIL,$2,$3,0,0); }
-         |
+bloco_tail: ';' comando bloco_tail { $$ = astCreat(AST_TAIL,0,$2,$3,0,0); }
+         |		           { $$ = 0; }
         ;
 
 /* Controle de Fluxo */

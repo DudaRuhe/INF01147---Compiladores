@@ -1,58 +1,7 @@
-char c ('x');
-char d (100);
-int a ('A');
-int i(1);
-int v[10] 'a' 0 0 0 0 0 0 0 0 0;
-int matrix[100]; 
-float f (2,5);
+##UFRGS - Compiladores - Marcelo Johann - 2022/1
 
 char c ('x');
-char d (100);
-int a ('A');
-int i(1);
-float f (2,5);
-int matrix[10];
-char cd[23] 'a' 0 1;
 
+int v[10] 'a' 0 0 0 0 0 0;
 
-int fi() {
-}
-
-float fii(int z float x char c){
-
-if (a>b) print "asdasdasd" else print "axxxxxxxxxx";
-
-if(a<b){
-print "a"
-};
-
-if(b>a){
-print "a";
-print "b";
-a <-iif();
-b <- asd(w 2 e);
-
-}else{
-return c;
-};
-{}
-{{{{}}}}
-{ print "da"; {{}} }
-if(a<6)
-while(a<6)
- print k
-while(b==a){
-print "j";
-};
-
-while(b==a)  print "b";
-
-}
-char fiii(int v int n int m){
-read a;
-}
-
-##comentario
-/# coiasda
-varia linhas 123231 if(asdas{asda}}}
-#/
+float f (12,4);

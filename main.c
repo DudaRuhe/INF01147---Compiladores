@@ -16,7 +16,7 @@ void hashInit(void);
 void hashPrint(void);
 int getLineNumber();
 
-void astToFile(AST* node, FILE *f, int level);
+void astToFile(AST* node, FILE *f);
 AST* getAST(void);
 
 int main (int argc, char **argv)
@@ -42,7 +42,7 @@ yyparse();
 hashPrint();
 
 printf("O arquivo possui %d linhas \n", getLineNumber());
-astToFile(getAST(), outputFile, 0);
+astToFile(getAST(), outputFile);
 yylex_destroy();
 fclose(outputFile);
 return 0;

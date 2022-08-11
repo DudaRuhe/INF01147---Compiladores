@@ -46,6 +46,9 @@ Tatiana Pacheco de Almeida - 00252861 */
 #define AST_PARENTESES 35
 #define AST_PROG_VAR 36
 #define AST_PROG_FUN 37
+#define AST_INT 38
+#define AST_FLOAT 39
+#define AST_CHAR 40
 
 typedef struct ast_node
 {
@@ -56,7 +59,7 @@ typedef struct ast_node
 
 AST *astCreat(int type, HASH_NODE *symbol, AST* son0, AST* son1, AST* son2, AST* son3);
 void ast_print(AST* node, int level);
-void astToFile(AST* node, FILE *f, int level);
+void astToFile(AST* node, FILE *f);
 
 
 
