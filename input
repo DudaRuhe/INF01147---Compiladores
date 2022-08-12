@@ -1,7 +1,5 @@
-##UFRGS - Compiladores - Marcelo Johann - 2022/1
 
-char c ('x');
+int f () {
+print f(a b v)
+}
 
-int v[10] 'a' 0 0 0 0 0 0;
-
-float f (12,4);

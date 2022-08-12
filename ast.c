@@ -52,6 +52,7 @@ void ast_print(AST* node, int level){
 		case AST_FUN: fprintf(stderr, "AST_FUN"); break;
 		case AST_ARG: fprintf(stderr, "AST_ARG"); break;
 		case AST_LCMD: fprintf(stderr, "AST_LCMD"); break;
+		case AST_TAIL: fprintf(stderr, "AST_TAIL"); break;
 		case AST_CMD: fprintf(stderr, "AST_CMD"); break;
 		case AST_RETURN: fprintf(stderr, "AST_RETURN"); break;
 		case AST_READ: fprintf(stderr, "AST_READ"); break;
@@ -71,6 +72,7 @@ void ast_print(AST* node, int level){
 		case AST_INT: fprintf(stderr, "AST_INT"); break;
 		case AST_FLOAT: fprintf(stderr, "AST_FLOAT"); break;
 		case AST_CHAR: fprintf(stderr, "AST_CHAR"); break;
+		
 
 		default: fprintf(stderr,"AST_UNKNOW"); break;
 	} 
@@ -94,41 +96,162 @@ void astToFile(AST* node, FILE *f)
 		case AST_SYMBOL: 
 			fprintf(f," %s ",node->symbol->text);
 			break;
-		case AST_ADD: fprintf(f, "AST_ADD"); break;
-		case AST_SUB: fprintf(f, "AST_SUB"); break;
-		case AST_MULT: fprintf(f, "AST_MULT"); break;
-		case AST_DIV: fprintf(f, "AST_DIV"); break;
-		case AST_ATTR: fprintf(f, "AST_ATTR"); break;
+
+		case AST_ADD: 
+			astToFile(node->son[0],f);
+			fprintf(f, "+");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_SUB: 
+			astToFile(node->son[0],f);
+			fprintf(f, "-");
+			astToFile(node->son[1],f); 
+			break; 
+
+		case AST_MULT:
+			astToFile(node->son[0],f);
+			fprintf(f, ".");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_DIV: 
+			astToFile(node->son[0],f);
+			fprintf(f, "/");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_ATTR: 
+			fprintf(f, "%s",node->symbol->text);
+			if(node->son[1]!=0){
+				fprintf(f,"[");
+				astToFile(node->son[1],f);
+				fprintf(f,"]");
+			}
+			fprintf(f, " <-");
+			astToFile(node->son[0],f);
+			break; 
+
 		case AST_VECTOR: 
 			fprintf(f," %s[",node->symbol->text);
-			astToFile(node->son[1],f);
+			astToFile(node->son[0],f);
 			fprintf(f,"]"); 
 			break;
 
-		case AST_GREATER: fprintf(f, "AST_GREATER"); break;
-		case AST_LESS: fprintf(f, "AST_LESS"); break;
-		case AST_OR: fprintf(f, "AST_OR"); break;
-		case AST_NEG: fprintf(f, "AST_NEG"); break;
-		case AST_AND: fprintf(f, "AST_AND"); break;
-		case AST_EQ: fprintf(f, "AST_EQ"); break;
-		case AST_DIF: fprintf(f, "AST_DIF"); break;
-		case AST_LE: fprintf(f, "AST_LE"); break;
-		case AST_GE: fprintf(f, "AST_GE"); break;
-		case AST_FUN: fprintf(f, "AST_FUN"); break;
-		case AST_ARG: fprintf(f, "AST_ARG"); break;
-		case AST_LCMD: fprintf(f, "AST_LCMD"); break;
-		case AST_CMD: fprintf(f, "AST_CMD"); break;
-		case AST_RETURN: fprintf(f, "AST_RETURN"); break;
-		case AST_READ: fprintf(f, "AST_READ"); break;
-		case AST_PRINT: fprintf(f, "AST_PRINT"); break;
-		case AST_PRINTL: fprintf(f, "AST_PRINTL"); break;
+		case AST_GREATER: 
+			astToFile(node->son[0],f);
+			fprintf(f, ">");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_LESS: 
+			astToFile(node->son[0],f);
+			fprintf(f, "<");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_OR: 
+			astToFile(node->son[0],f);
+			fprintf(f, "|");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_NEG: 
+			astToFile(node->son[0],f);
+			fprintf(f, "~");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_AND: 
+			astToFile(node->son[0],f);
+			fprintf(f, "&");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_EQ: 
+			astToFile(node->son[0],f);
+			fprintf(f, "==");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_DIF:
+			astToFile(node->son[0],f);
+			fprintf(f, "!=");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_LE: 
+			astToFile(node->son[0],f);
+			fprintf(f, "<=");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_GE:
+			astToFile(node->son[0],f);
+			fprintf(f, ">=");
+			astToFile(node->son[1],f); 
+			break;
+
+		case AST_FUN: 
+			fprintf(f," %s(",node->symbol->text);
+			astToFile(node->son[0],f);
+			fprintf(f, ")");
+			break;
+
+		case AST_ARG: 
+			astToFile(node->son[0],f);
+			astToFile(node->son[1],f);
+			break;
+
+		case AST_LCMD: 
+			astToFile(node->son[0],f);
+			astToFile(node->son[1],f);
+			break;
+
+		case AST_TAIL:
+			fprintf(f, ";\n");
+			astToFile(node->son[0],f);
+			astToFile(node->son[1],f);
+			break;
+
+		case AST_CMD: 
+			fprintf(f, "{\n"); 
+			astToFile(node->son[0],f);
+			fprintf(f, "}\n");
+			break;
+			
+		case AST_RETURN: 
+			fprintf(f, "return");
+			astToFile(node->son[0],f); 
+			break;
+
+		case AST_READ: 
+			fprintf(f, "read");
+			fprintf(f," %s",node->symbol->text);
+			if(node->son[0] != 0){
+				fprintf(f,"[");
+				astToFile(node->son[0],f);
+				fprintf(f,"]");	
+			}
+			break;
+
+		case AST_PRINT: 
+			fprintf(f, "print");
+			astToFile(node->son[0],f);  
+			break;
+
+		case AST_PRINTL: 
+			if(node->symbol !=0)
+				fprintf(f," %s",node->symbol->text);
+			astToFile(node->son[0],f); 
+			astToFile(node->son[1],f); 
+			break;
 		case AST_SYMBOLL: 
 			astToFile(node->son[0],f); 
 			astToFile(node->son[1],f); 
 			break;
 
-		case AST_VAR: 
-				
+		case AST_VAR: 	
 			astToFile(node->son[0], f);
 			fprintf(f," %s (",node->symbol->text);
 			astToFile(node->son[1],f);
@@ -143,12 +266,50 @@ void astToFile(AST* node, FILE *f)
 			astToFile(node->son[2],f);
 			fprintf(f,";\n");
 			break;
-		case AST_FUNATR: fprintf(f, "AST_FUNATR"); break;
-		case AST_FUNCAO: fprintf(f, "AST_FUNCAO"); break;
-		case AST_IF: fprintf(f, "AST_IF"); break;
-		case AST_IFELSE: fprintf(f, "AST_IFELSE"); break;
-		case AST_WHILE: fprintf(f, "AST_WHILE"); break;
-		case AST_PARENTESES: fprintf(f, "AST_PARENTESES"); break;
+
+		case AST_FUNATR: 
+			astToFile(node->son[1], f);
+			fprintf(f," %s ",node->symbol->text);
+			astToFile(node->son[0], f);
+			break;
+
+		case AST_FUNCAO:
+			 astToFile(node->son[0], f);
+			 fprintf(f," %s(",node->symbol->text);
+			 astToFile(node->son[1], f);
+			 fprintf(f,")");
+			 astToFile(node->son[2], f);
+			 break;
+
+		case AST_IF: 
+			fprintf(f, "if("); 
+			astToFile(node->son[0], f);
+			fprintf(f,")\n");
+			astToFile(node->son[1], f);
+			break;
+
+		case AST_IFELSE: 
+			fprintf(f, "if("); 
+			astToFile(node->son[0], f);
+			fprintf(f,")\n");
+			astToFile(node->son[1], f);
+			fprintf(f,"else\n");
+			astToFile(node->son[2], f);
+			break;
+
+		case AST_WHILE:
+			fprintf(f, "while("); 
+			astToFile(node->son[0], f);
+			fprintf(f,")\n");
+			astToFile(node->son[1], f);
+			break;
+
+		case AST_PARENTESES: 
+			fprintf(f, "(");
+			 astToFile(node->son[0], f);
+			fprintf(f, ")"); 
+			break;
+
 		case AST_PROG_VAR: 
 		case AST_PROG_FUN:
 			for (int i=0; i<MAXSON; i++)

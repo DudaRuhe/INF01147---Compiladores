@@ -139,23 +139,23 @@ command_print: KW_PRINT lista_print { $$ = astCreat(AST_PRINT,0,$2,0,0,0); }
 	;
 
 command_read: KW_READ TK_IDENTIFIER { $$ = astCreat(AST_READ,$2,0,0,0,0); } 
-	| KW_READ TK_IDENTIFIER'['expressao']' { $$ = astCreat(AST_READ,$2,$4,0,0,0); ast_print($4,0);} 
+	| KW_READ TK_IDENTIFIER'['expressao']' { $$ = astCreat(AST_READ,$2,$4,0,0,0);} 
 	;
 
 command_return: KW_RETURN expressao { $$ = astCreat(AST_RETURN,0,$2,0,0,0);} 
 	;
 
-command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,$3,$6,0,0);} 
+command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,$6,$3,0,0);} 
 	| TK_IDENTIFIER ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,$3,0,0,0);}   		
 	;
 
 /* Funções */
 
-funcao_entrada: tipos_primitivos TK_IDENTIFIER funcao_entrada { $$ = astCreat(AST_FUNATR,$2,$3,0,0,0);}
+funcao_entrada: tipos_primitivos TK_IDENTIFIER funcao_entrada { $$ = astCreat(AST_FUNATR,$2,$3,$1,0,0);}
 	|						{ $$ = 0; }
 	;
 
-funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')'  bloco { $$ = astCreat(AST_FUNCAO,$2,$4,$6,0,0); }
+funcao: tipos_primitivos TK_IDENTIFIER '(' funcao_entrada ')'  bloco { $$ = astCreat(AST_FUNCAO,$2,$1,$4,$6,0); }
 	;
 /* Blocos de Comando */
 
@@ -172,7 +172,7 @@ bloco_tail: ';' comando bloco_tail { $$ = astCreat(AST_TAIL,0,$2,$3,0,0); }
 /* Controle de Fluxo */
 
 fluxo:  KW_IF '(' expressao ')' comando			{ $$ = astCreat(AST_IF,0,$3,$5,0,0);  }
-	| KW_IF '(' expressao ')' comando KW_ELSE comando  { $$ = astCreat(AST_IFELSE,0,$3,$5,0,0);  }
+	| KW_IF '(' expressao ')' comando KW_ELSE comando  { $$ = astCreat(AST_IFELSE,0,$3,$5,$7,0); }
 	| KW_WHILE '(' expressao ')' comando		{ $$ = astCreat(AST_WHILE,0,$3,$5,0,0);  }
         ;
 
