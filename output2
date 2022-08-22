@@ -1,2 +1,5 @@
-int f(){
-print f( a  b  v )}
+int a ( 3 );
+int b ( 2 );
+float fun(){
+b <- a + fun();
+}

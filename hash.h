@@ -30,11 +30,18 @@ Tatiana Pacheco de Almeida - 00252861 */
 #define SYMBOL_LIT_CHAR 18
 #define SYMBOL_LIT_STRING 19 
 #define SYMBOL_TOKEN_ERROR 20
-      
+#define SYMBOL_VARIABLE 21
+#define SYMBOL_FUNCTION 22
+#define SYMBOL_VECTOR 23
+
+#define DATATYPE_INT 1
+#define DATATYPE_CHAR 2
+#define DATATYPE_FLOAT 3      
 
 typedef struct hash_node
 {
 	int type;
+	int datatype;
 	char *text;
 	struct hash_node * next;
 } HASH_NODE;
@@ -44,7 +51,7 @@ int hashAddress(char *text);
 HASH_NODE *hashFind(char *text);
 HASH_NODE *hashInsert(char *text,int type);
 void hashPrint(void);
+int hash_check_undeclared(void);
 
 #endif
-
 

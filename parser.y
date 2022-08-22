@@ -7,6 +7,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 %{
 #include "hash.h"
 #include "ast.h"
+#include "semantic.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -87,8 +88,12 @@ AST *astRoot;
 
 %%
 
-begin: programa {astRoot = $1; ast_print($1,0);}
-;
+begin: programa {astRoot = $1; ast_print($1,0);
+		check_and_set_declarations($1);
+		check_undeclared();
+		check_operands($1);
+		}
+
 
 programa: variaveis_globais programa  {$$ = astCreat(AST_PROG_VAR,0,$1,$2,0,0); }
 	| funcao programa 	      {$$ = astCreat(AST_PROG_FUN,0,$1,$2,0,0); }
@@ -183,6 +188,7 @@ expressao: TK_IDENTIFIER		{$$ = astCreat(AST_SYMBOL,$1,0,0,0,0); }
     | TK_IDENTIFIER '[' expressao ']'   {$$ = astCreat(AST_VECTOR,$1,$3,0,0,0); }
     | LIT_INTEGER 			{$$ = astCreat(AST_SYMBOL,$1,0,0,0,0); }		
     | LIT_CHAR 				{$$ = astCreat(AST_SYMBOL,$1,0,0,0,0); }
+    | LIT_FLOAT 			{$$ = astCreat(AST_SYMBOL,$1,0,0,0,0); }
     | expressao '+' expressao		{$$ = astCreat(AST_ADD,0,$1,$3,0,0); }
     | expressao '-' expressao		{$$ = astCreat(AST_SUB,0,$1,$3,0,0); }
     | expressao '.' expressao		{$$ = astCreat(AST_MULT,0,$1,$3,0,0); }

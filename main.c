@@ -33,7 +33,7 @@ yyin = fopen(argv[1],"r");
   if((outputFile = fopen(argv[2], "w")) == 0)
  {
    fprintf(stderr, "Cannot open file %s\n", argv[2]);
-   exit(4);
+   exit(2);
  }
 hashInit();
 

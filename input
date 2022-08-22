@@ -1,5 +1,9 @@
+int a (3);
+int b (2);
 
-int f () {
-print f(a b v)
+int fun(){
+
+b <- a + fun();
+
 }
 
