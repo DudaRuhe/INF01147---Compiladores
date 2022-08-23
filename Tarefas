@@ -2,10 +2,11 @@
 
 2 - Return deve ser de um tipo correto, mas ele não está testando se o tipo é a da função
 
-3 - Deve mostrar o numero da linha do erro (colocar o valor na criação do ast)
+3 - Deve mostrar o numero da linha do erro
 
 4 - FUnções ifelse deve ter expessoes bool
 
 5 - Correção de um numeor em expressoes
 
+6 - Verificar (expressoes) 
  

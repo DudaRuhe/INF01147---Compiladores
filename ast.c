@@ -7,12 +7,13 @@ Tatiana Pacheco de Almeida - 00252861 */
 #include "ast.h"
 
 
-AST* astCreat(int type, HASH_NODE* symbol, AST* son0, AST* son1, AST* son2, AST* son3){
+AST* astCreat(int type, HASH_NODE* symbol, AST* son0, AST* son1, AST* son2, AST* son3, int line){
 	
 	
 	AST*newnode;
 	newnode=(AST*) calloc (1, sizeof(AST));
 	newnode->type = type;
+	newnode->line = line;
 	newnode->symbol =symbol;
 	newnode->son[0] = son0;
 	newnode->son[1] = son1;

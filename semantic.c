@@ -20,7 +20,7 @@ void check_and_set_declarations (AST *node)
 		     if (node->symbol)
 			if (node->symbol->type!= SYMBOL_IDENTIFIER)
 			{
-			fprintf(stderr, "Semantic ERROR: Variable %s \n",node->symbol->text);
+			fprintf(stderr, "[Line %d] Semantic ERROR: Variable %s \n",node->line, node->symbol->text);
 			++ semanticerrors;	
 			} 
 			node->symbol->type = SYMBOL_VARIABLE;
@@ -39,7 +39,7 @@ void check_and_set_declarations (AST *node)
 			if (node->symbol->type!= SYMBOL_IDENTIFIER)
 			{
 
-			fprintf(stderr, "Semantic ERROR: Function %s \n",node->symbol->text);
+			fprintf(stderr, "[Line %d] Semantic ERROR: Function %s \n",node->line, node->symbol->text);
 			++ semanticerrors;	
 			} 
 			node->symbol->type = SYMBOL_FUNCTION;
@@ -57,7 +57,7 @@ void check_and_set_declarations (AST *node)
 			if (node->symbol->type!= SYMBOL_IDENTIFIER)
 			{
 
-			fprintf(stderr, "Semantic ERROR: Vector %s \n",node->symbol->text);
+			fprintf(stderr, "[Line %d] Semantic ERROR: Vector %s \n",node->line, node->symbol->text);
 			++ semanticerrors;	
 			} 
 			node->symbol->type = SYMBOL_VECTOR;
@@ -76,7 +76,7 @@ void check_and_set_declarations (AST *node)
 		     if (node->symbol)
 			if (node->symbol->type!= SYMBOL_IDENTIFIER)
 			{
-			fprintf(stderr, "Semantic ERROR: Function ATTR %s \n",node->symbol->text);
+			fprintf(stderr, "[Line %d] Semantic ERROR: Function ATTR %s \n",node->line, node->symbol->text);
 			++ semanticerrors;	
 			} 
 			node->symbol->type = SYMBOL_VARIABLE;
@@ -147,24 +147,38 @@ if(	(son->type == AST_ADD ||
 			son->type == AST_LE ||
 			son->type == AST_GE ||
 			(son->type == AST_SYMBOL && 
-  				((son->symbol->type == SYMBOL_LIT_INTEGER) || (son->symbol->type == SYMBOL_LIT_CHAR) || (son->symbol->datatype == DATATYPE_INT && son->symbol->type == SYMBOL_VARIABLE) ) )||  
+  				((son->symbol->type == SYMBOL_LIT_FLOAT) || (son->symbol->datatype == DATATYPE_FLOAT && son->symbol->type == SYMBOL_VARIABLE) ) )||  
 			(son->type == AST_FUN && 
-				son->symbol->type == SYMBOL_FUNCTION && son->symbol->datatype == DATATYPE_INT) ||
+				son->symbol->type == SYMBOL_FUNCTION && son->symbol->datatype == DATATYPE_FLOAT) ||
 		(son->type == AST_VECTOR && 
-				son->symbol->datatype == DATATYPE_INT && son->symbol->type == SYMBOL_VECTOR && is_number(son->son[0],0) )
+				son->symbol->datatype == DATATYPE_FLOAT && son->symbol->type == SYMBOL_VECTOR && is_number(son->son[0],0) )
 			))
 		return 1;
-else return 0;
+else fprintf(stderr,"datatype = %d\n",datatype); return 0;
 }
 }
-void 
+
 void check_commands(AST *node){
 	int i;
 	if (!node) return;
 
 	switch (node->type)
 	{
-		case AST_READ: //vetores e atributos certos
+		case AST_READ: 
+			if(node->son[0]!=0){
+			if(node->symbol->type == SYMBOL_VECTOR)
+					check_operands(node->son[0],DATATYPE_INT);
+				else{
+			
+			  		fprintf(stderr, "[Line %d] Semantic ERROR: Not vector in Read \n",node->line);
+			  		++ semanticerrors;
+					}
+			}
+			else{ if(node->symbol->type == SYMBOL_VECTOR) {
+				fprintf(stderr, "[Line %d] Semantic ERROR: Vector whithout [] in Read \n", node->line);
+			  		++ semanticerrors;
+				}
+			}
 			 break;
 		case AST_RETURN: // tipo mesmo de função
 			break;
@@ -175,12 +189,12 @@ void check_commands(AST *node){
 					check_operands(node->son[0],DATATYPE_INT);
 				else{
 			
-			  		fprintf(stderr, "Semantic ERROR: Not vector \n");
+			  		fprintf(stderr, "[Line %d] Semantic ERROR: Not vector \n",node->line);
 			  		++ semanticerrors;
 					}
 			}
 			else{ if(node->symbol->type == SYMBOL_VECTOR) {
-				fprintf(stderr, "Semantic ERROR: Vector whithout [] \n");
+				fprintf(stderr, "[Line %d] Semantic ERROR: Vector whithout [] \n", node->line);
 			  		++ semanticerrors;
 				}
 			}
@@ -206,7 +220,7 @@ void check_operands(AST *node, int datatype)
 		  if(!(is_number(node->son[0], DATATYPE_INT) && is_number(node->son[1], DATATYPE_INT))
  && !(is_number(node->son[0], DATATYPE_FLOAT) && is_number(node->son[1], DATATYPE_FLOAT)))
 		{
-			fprintf(stderr, "Semantic ERROR: Invalid Operands  \n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Operands  \n", node->line);
 			++ semanticerrors;
 		}
 			
@@ -214,12 +228,12 @@ void check_operands(AST *node, int datatype)
 		 else{
 		 if (! (is_number(node->son[0], datatype)))
 		     {
-			fprintf(stderr, "Semantic ERROR: Invalid Left Operands for ADD \n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Left Operands for ADD \n",node->son[0]->line);
 			++ semanticerrors;
 		     };
 		  if (! (is_number(node->son[1], datatype)))
 		     {
-			fprintf(stderr, "Semantic ERROR: Invalid Right Operands for ADD \n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Right Operands for ADD \n",node->son[1]->line);
 			++ semanticerrors;
 		     };
 		} break;
@@ -228,7 +242,7 @@ void check_operands(AST *node, int datatype)
 		  	  if(!(is_number(node->son[0], DATATYPE_INT) && is_number(node->son[1], DATATYPE_INT))
  && !(is_number(node->son[0], DATATYPE_FLOAT) && is_number(node->son[1], DATATYPE_FLOAT)))
 		{
-			fprintf(stderr, "Semantic ERROR: Invalid Operands \n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Operands \n",node->line);
 			++ semanticerrors;
 		}
 			
@@ -236,12 +250,12 @@ void check_operands(AST *node, int datatype)
 		 else{		
 			if (! (is_number(node->son[0], datatype)))
 		     {
-			fprintf(stderr, "Semantic ERROR: Invalid Left Operands for SUB \n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Left Operands for SUB \n", node->son[0]->line);
 			++ semanticerrors;
 		     };
 		  if (! (is_number(node->son[1], datatype)))
 		     {
-			fprintf(stderr, "Semantic ERROR: Invalid Right Operands for SUB \n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Right Operands for SUB \n",node->son[1]->line);
 			++ semanticerrors;
 		     };
 			} break;
@@ -250,7 +264,7 @@ void check_operands(AST *node, int datatype)
 		  	  if(!(is_number(node->son[0], DATATYPE_INT) && is_number(node->son[1], DATATYPE_INT))
  && !(is_number(node->son[0], DATATYPE_FLOAT) && is_number(node->son[1], DATATYPE_FLOAT)))
 		{
-			fprintf(stderr, "Semantic ERROR: Invalid Operands  \n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Operands  \n", node->line);
 			++ semanticerrors;
 		}
 			
@@ -258,12 +272,12 @@ void check_operands(AST *node, int datatype)
 		 else{		
 			if (! (is_number(node->son[0], datatype)))
 		     {
-			fprintf(stderr, "Semantic ERROR: Invalid Left Operands for MULT \n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Left Operands for MULT \n", node->son[0]->line);
 			++ semanticerrors;
 		     };
 		  if (! (is_number(node->son[1], datatype)))
 		     {
-			fprintf(stderr, "Semantic ERROR: Invalid Right Operands for MULT \n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Right Operands for MULT \n",node->son[1]->line);
 			++ semanticerrors;
 		     }
 		} break;
@@ -272,7 +286,7 @@ void check_operands(AST *node, int datatype)
 	 	  	 if(!(is_number(node->son[0], DATATYPE_INT) && is_number(node->son[1], DATATYPE_INT))
  && !(is_number(node->son[0], DATATYPE_FLOAT) && is_number(node->son[1], DATATYPE_FLOAT)))
 		{
-			fprintf(stderr, "Semantic ERROR: Operands\n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Operands\n", node->line);
 			++ semanticerrors;
 		}
 			
@@ -280,42 +294,42 @@ void check_operands(AST *node, int datatype)
 		 else{	
 			if (! (is_number(node->son[0], datatype)))
 		     {
-			fprintf(stderr, "Semantic ERROR: Invalid Left Operands for DIV \n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Left Operands for DIV \n", node->son[0]->line);
 			++ semanticerrors;
 		     };
 		  if (! (is_number(node->son[1], datatype)))
 		     {
-			fprintf(stderr, "Semantic ERROR: Invalid Right Operands for DIV \n");
+			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Right Operands for DIV \n",node->son[1]->line);
 			++ semanticerrors;
 		     }
 		} break;
 		case AST_GREATER: 
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, " Type does not accept bool\n");	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
 		case AST_LESS: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, " Type does not accept bool\n");	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
 		case AST_OR: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, " Type does not accept bool\n");	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
 		case AST_NEG: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, " Type does not accept bool\n");	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
 		case AST_AND: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, " Type does not accept bool\n");	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
 		case AST_EQ: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, " Type does not accept bool\n");	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
 		case AST_DIF: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, " Type does not accept bool\n");	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
 		case AST_LE: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, " Type does not accept bool\n");	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
 		case AST_GE: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, " Type does not accept bool\n");	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
 		case AST_SYMBOL:  	
 				break; 
 		case AST_VECTOR:
