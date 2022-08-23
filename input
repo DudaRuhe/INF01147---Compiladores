@@ -1,7 +1,7 @@
 int a (2);
 int b[10];
 
-int fun(int c float d char g){
-
+int fun(){
+ b[5] <-3 + a;
 }
 

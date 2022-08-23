@@ -91,7 +91,7 @@ AST *astRoot;
 begin: programa {astRoot = $1; ast_print($1,0);
 		check_and_set_declarations($1);
 		check_undeclared();
-		check_operands($1);
+		check_commands($1);
 		}
 
 
@@ -151,7 +151,7 @@ command_return: KW_RETURN expressao { $$ = astCreat(AST_RETURN,0,$2,0,0,0);}
 	;
 
 command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,$6,$3,0,0);} 
-	| TK_IDENTIFIER ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,$3,0,0,0);}   		
+	| TK_IDENTIFIER ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,0,$3,0,0);}   		
 	;
 
 /* Funções */

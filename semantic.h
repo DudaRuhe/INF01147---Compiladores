@@ -17,7 +17,7 @@ void check_undeclared();
 
 void check_operands();
 
-int is_number();
+int is_number(AST *node, int datatype);
 
 void check_commands(AST *node);
 
