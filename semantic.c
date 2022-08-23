@@ -106,7 +106,8 @@ semanticerrors += hash_check_undeclared();
 
 int is_number(AST *son, int datatype)
 {
-
+if( son->type == AST_PARENTESES)
+	return is_number(son->son[0], datatype);
 if( datatype == DATATYPE_INT || datatype == DATATYPE_CHAR) {
 	if(	(son->type == AST_ADD ||
 			son->type == AST_SUB ||
@@ -201,6 +202,10 @@ void check_commands(AST *node){
 			
 			check_operands(node->son[1],node->symbol->datatype);	
 			break;
+		case AST_IF: 
+			check_operands(node->son[1],node->symbol->datatype); break;
+		case AST_IFELSE: break;
+		case AST_WHILE: break;
 		
 	}
 for (i=0; i<MAXSON; i++)
@@ -305,25 +310,80 @@ void check_operands(AST *node, int datatype)
 		} break;
 		case AST_GREATER: 
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	
+			else {
+				 if(!(is_number(node->son[0], DATATYPE_INT) && is_number(node->son[1], DATATYPE_INT))
+ 				 && !(is_number(node->son[0], DATATYPE_FLOAT) && is_number(node->son[1], DATATYPE_FLOAT)))
+				{
+					fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Operands IN >  \n", node->line);
+					++ semanticerrors;
+				}
+			}
+			break;
 		case AST_LESS: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);
+			else {
+				 if(!(is_number(node->son[0], DATATYPE_INT) && is_number(node->son[1], DATATYPE_INT))
+ 				 && !(is_number(node->son[0], DATATYPE_FLOAT) && is_number(node->son[1], DATATYPE_FLOAT)))
+				{
+					fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Operands IN <  \n", node->line);
+					++ semanticerrors;
+				}
+			}			
+			break;
 		case AST_OR: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);
+			else {
+				 if(!(is_number(node->son[0], DATATYPE_INT) && is_number(node->son[1], DATATYPE_INT))
+ 				 && !(is_number(node->son[0], DATATYPE_FLOAT) && is_number(node->son[1], DATATYPE_FLOAT)))
+				{
+					fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Operands IN || \n", node->line);
+					++ semanticerrors;
+				}
+			}
+		break;
 		case AST_NEG: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);
+			else {
+				 if(!(is_number(node->son[0], DATATYPE_INT) && is_number(node->son[1], DATATYPE_INT))
+ 				 && !(is_number(node->son[0], DATATYPE_FLOAT) && is_number(node->son[1], DATATYPE_FLOAT)))
+				{
+					fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Operands IN ~ \n", node->line);
+					++ semanticerrors;
+				}
+			}
+		break;
 		case AST_AND: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);
+			else {
+				 if(!(is_number(node->son[0], DATATYPE_INT) && is_number(node->son[1], DATATYPE_INT))
+ 				 && !(is_number(node->son[0], DATATYPE_FLOAT) && is_number(node->son[1], DATATYPE_FLOAT)))
+				{
+					fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Operands & \n", node->line);
+					++ semanticerrors;
+				}
+			}	
+			break;
 		case AST_EQ: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	
+			else {
+				 if(!(is_number(node->son[0], DATATYPE_INT) && is_number(node->son[1], DATATYPE_INT))
+ 				 && !(is_number(node->son[0], DATATYPE_FLOAT) && is_number(node->son[1], DATATYPE_FLOAT)))
+				{
+					fprintf(stderr, "[Line %d] Semantic ERROR: Invalid Operands IN == \n", node->line);
+					++ semanticerrors;
+				}
+			}
+			break;
 		case AST_DIF: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
-				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
+				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	
+			break;
 		case AST_LE: 		
 			if(datatype == DATATYPE_INT || datatype == DATATYPE_CHAR || datatype == DATATYPE_FLOAT)
 				fprintf(stderr, "[Line %d] Type does not accept bool\n",node->line);	break;
