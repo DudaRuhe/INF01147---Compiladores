@@ -19,6 +19,8 @@ void check_operands();
 
 int is_number();
 
+void check_commands(AST *node);
+
 int get_semantic_erros(); // falta testar na main com exit(4)
  
 #endif

@@ -156,7 +156,7 @@ command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao { $$ = ast
 
 /* Funções */
 
-funcao_entrada: tipos_primitivos TK_IDENTIFIER funcao_entrada { $$ = astCreat(AST_FUNATR,$2,$3,$1,0,0);}
+funcao_entrada: tipos_primitivos TK_IDENTIFIER funcao_entrada { $$ = astCreat(AST_FUNATR,$2,$1,$3,0,0);}
 	|						{ $$ = 0; }
 	;
 

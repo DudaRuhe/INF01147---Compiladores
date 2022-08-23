@@ -52,6 +52,44 @@ void check_and_set_declarations (AST *node)
 			if(node->son[0])
 			  if(node->son[0]->type == AST_CHAR)
 			  node->symbol->datatype = DATATYPE_CHAR; break;
+		case AST_VETOR: 
+			 if (node->symbol)
+			if (node->symbol->type!= SYMBOL_IDENTIFIER)
+			{
+
+			fprintf(stderr, "Semantic ERROR: Vector %s \n",node->symbol->text);
+			++ semanticerrors;	
+			} 
+			node->symbol->type = SYMBOL_VECTOR;
+			if(node->son[0])
+			  if(node->son[0]->type == AST_INT)
+			  node->symbol->datatype = DATATYPE_INT;
+			if(node->son[0])			
+			  if(node->son[0]->type == AST_FLOAT)
+			  node->symbol->datatype = DATATYPE_FLOAT;
+			if(node->son[0])
+			  if(node->son[0]->type == AST_CHAR)
+			  node->symbol->datatype = DATATYPE_CHAR;
+			
+		break;
+		case AST_FUNATR: 
+		     if (node->symbol)
+			if (node->symbol->type!= SYMBOL_IDENTIFIER)
+			{
+			fprintf(stderr, "Semantic ERROR: Function ATTR %s \n",node->symbol->text);
+			++ semanticerrors;	
+			} 
+			node->symbol->type = SYMBOL_VARIABLE;
+			if(node->son[0])
+			  if(node->son[0]->type == AST_INT)
+			  node->symbol->datatype = DATATYPE_INT;
+			if(node->son[0])			
+			  if(node->son[0]->type == AST_FLOAT)
+			  node->symbol->datatype = DATATYPE_FLOAT;
+			if(node->son[0])
+			  if(node->son[0]->type == AST_CHAR)
+			  node->symbol->datatype = DATATYPE_CHAR;
+			break;
 	
 	}
 
@@ -84,13 +122,14 @@ int is_number(AST *son)
 			(son->type == AST_SYMBOL && 
   				((son->symbol->type == SYMBOL_LIT_INTEGER) || (son->symbol->datatype == DATATYPE_INT) ) )||  
 			(son->type == AST_FUN && 
-				son->symbol->datatype == DATATYPE_INT)
+				son->symbol->type == SYMBOL_FUNCTION && son->symbol->datatype == DATATYPE_INT)
 			))
 		return 1;
 else return 0;
 }
 
-
+void check_commands(AST *node){
+}
 void check_operands(AST *node)
 {
 	int i;

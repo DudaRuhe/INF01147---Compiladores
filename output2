@@ -1,5 +1,4 @@
-int a ( 3 );
-int b ( 2 );
-float fun(){
-b <- a + fun();
+int a ( 2 );
+int b[ 10 ];
+int fun( g char d float c int){
 }
