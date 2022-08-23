@@ -92,6 +92,8 @@ begin: programa {astRoot = $1; ast_print($1,0);
 		check_and_set_declarations($1);
 		check_undeclared();
 		check_commands($1);
+		//if(get_semantic_erros()>0)
+			//exit(4);
 		}
 
 

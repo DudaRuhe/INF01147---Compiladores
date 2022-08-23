@@ -157,7 +157,7 @@ if(	(son->type == AST_ADD ||
 else return 0;
 }
 }
-
+void 
 void check_commands(AST *node){
 	int i;
 	if (!node) return;
@@ -170,15 +170,23 @@ void check_commands(AST *node){
 			break;
 		
 		case AST_ATTR:
-			if(node->son[0]!=0 && node->symbol->type == SYMBOL_VECTOR)
-			check_operands(node->son[0],DATATYPE_INT);
-			else{
-			  fprintf(stderr, "Semantic ERROR: Not vector, or vector whithout [] \n");
-			++ semanticerrors;
+			if(node->son[0]!=0){
+				if(node->symbol->type == SYMBOL_VECTOR)
+					check_operands(node->son[0],DATATYPE_INT);
+				else{
+			
+			  		fprintf(stderr, "Semantic ERROR: Not vector \n");
+			  		++ semanticerrors;
+					}
+			}
+			else{ if(node->symbol->type == SYMBOL_VECTOR) {
+				fprintf(stderr, "Semantic ERROR: Vector whithout [] \n");
+			  		++ semanticerrors;
+				}
 			}
 			
 			check_operands(node->son[1],node->symbol->datatype);	
-			 break;
+			break;
 		
 	}
 for (i=0; i<MAXSON; i++)
@@ -318,4 +326,8 @@ void check_operands(AST *node, int datatype)
 	for (i=0; i<MAXSON; i++)
 		check_operands(node->son[i], datatype);
 } // check_operands
+
+int get_semantic_erros(){
+ return semanticerrors;
+}
 
