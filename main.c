@@ -25,7 +25,7 @@ int main (int argc, char **argv)
  int token = 0;
   if(argc < 2)
   {
-    fprintf(stderr, "Call ./etapa3 file_name\n");
+    fprintf(stderr, "Call ./etapa4 file_name\n");
     exit(1);
   }
 
@@ -33,7 +33,7 @@ yyin = fopen(argv[1],"r");
   if((outputFile = fopen(argv[2], "w")) == 0)
  {
    fprintf(stderr, "Cannot open file %s\n", argv[2]);
-   exit(2);
+   exit(4);
  }
 hashInit();
 

@@ -17,13 +17,10 @@ void check_undeclared();
 
 void check_operands();
 
-int is_number(AST *node, int datatype);
-
-void check_commands(AST *node);
+int is_number();
 
 int get_semantic_erros(); // falta testar na main com exit(4)
  
 #endif
-
 
 

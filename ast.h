@@ -53,12 +53,12 @@ Tatiana Pacheco de Almeida - 00252861 */
 typedef struct ast_node
 {
 	int type;
-	int line;
+	int datatype;
 	struct ast_node *son[MAXSON];
 	HASH_NODE *symbol;
 } AST;
 
-AST *astCreat(int type, HASH_NODE *symbol, AST* son0, AST* son1, AST* son2, AST* son3, int line);
+AST *astCreat(int type, HASH_NODE *symbol, AST* son0, AST* son1, AST* son2, AST* son3);
 void ast_print(AST* node, int level);
 void astToFile(AST* node, FILE *f);
 

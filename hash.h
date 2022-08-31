@@ -37,7 +37,6 @@ Tatiana Pacheco de Almeida - 00252861 */
 #define DATATYPE_INT 1
 #define DATATYPE_CHAR 2
 #define DATATYPE_FLOAT 3
-#define DATATYPE_BOOL 4
       
 
 typedef struct hash_node
@@ -56,4 +55,5 @@ void hashPrint(void);
 int hash_check_undeclared(void);
 
 #endif
+
 

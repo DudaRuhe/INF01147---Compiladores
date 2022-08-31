@@ -1,5 +1,2 @@
-int a ( 2 );
-int b[ 10 ];
-int fun(){
-b[ 5 ] <- 3 + a ;
-}
+int f(){
+print f( a  b  v )}

@@ -1,8 +1,4 @@
-float a (2);
-int b[10];
-
-int fun(){
- a <- (2,4 + 4,5) - (3,5);
-
-}
-
+int a
+int b
+char c
+2 + 3
