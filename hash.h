@@ -8,6 +8,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "tacs.h"
 
 #define HASH_SIZE 997
 #define SYMBOL_IDENTIFIER 1
@@ -33,6 +34,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 #define SYMBOL_VARIABLE 21
 #define SYMBOL_FUNCTION 22
 #define SYMBOL_VECTOR 23
+#define SYMBOL_LABEL 24
 
 #define DATATYPE_INT 1
 #define DATATYPE_CHAR 2
@@ -54,6 +56,8 @@ HASH_NODE *hashFind(char *text);
 HASH_NODE *hashInsert(char *text,int type);
 void hashPrint(void);
 int hash_check_undeclared(void);
+HASH_NODE* make_temp(void);
+HASH_NODE* make_label(void);
 
 #endif
 

@@ -4,6 +4,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 
 
 #include "semantic.h"
+#include "tacs.h"
 
 
 int semanticerrors=0;

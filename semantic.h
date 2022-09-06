@@ -8,6 +8,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 
 #include "ast.h"
 #include "hash.h"
+#include "tacs.h"
 
 extern int semanticerrors;
 
