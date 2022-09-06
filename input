@@ -1,8 +1,15 @@
-float a (2);
-int b[10];
+int a
+int b
+int c
+int d
+int soma;
 
-int fun(){
- a <- (2,4 + 4,5) - (3,5);
+a=1;
+b=2;
+c=3;
+d=4;
 
-}
+soma= a + b + c +d;
+
+4 + 4 + 4 + 4;
 

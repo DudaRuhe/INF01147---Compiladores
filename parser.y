@@ -10,6 +10,8 @@ Tatiana Pacheco de Almeida - 00252861 */
 #include "semantic.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "tacs.h"
+
 
 int yylex(void);
 void yyerror (char const *s);
@@ -92,8 +94,9 @@ begin: programa {astRoot = $1; ast_print($1,0);
 		check_and_set_declarations($1);
 		check_undeclared();
 		check_commands($1);
-		//if(get_semantic_erros()>0)
-			//exit(4);
+		print_tac_back(generate_code($1));
+		
+		
 		}
 
 

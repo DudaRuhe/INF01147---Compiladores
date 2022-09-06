@@ -54,6 +54,7 @@ HASH_NODE *hashFind(char *text);
 HASH_NODE *hashInsert(char *text,int type);
 void hashPrint(void);
 int hash_check_undeclared(void);
+HASH_NODE* make_temp(void);
 
 #endif
 

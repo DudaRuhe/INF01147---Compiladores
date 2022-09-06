@@ -5,6 +5,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 #include <stdio.h>
 #include <stdlib.h>
 #include "ast.h"
+#include "tacs.h"
 
 
 AST* astCreat(int type, HASH_NODE* symbol, AST* son0, AST* son1, AST* son2, AST* son3, int line){
