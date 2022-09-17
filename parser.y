@@ -92,8 +92,8 @@ begin: programa {astRoot = $1; ast_print($1,0);
 		check_and_set_declarations($1);
 		check_undeclared();
 		check_commands($1);
-		//if(get_semantic_erros()>0)
-			//exit(4);
+		if(get_semantic_erros()>0)
+			exit(4);
 		}
 
 
@@ -138,7 +138,7 @@ comando:  command_print  	{$$ = $1; }
       	 ;
 
 lista_print: LIT_STRING lista_print { $$ = astCreat(AST_PRINTL,$1,$2,0,0,0,yylineno); } 
-	| expressao lista_print { $$ = astCreat(AST_PRINTL,0,$1,$2,0,0,yylineno); } 
+	| expressao lista_print { $$ = astCreat(AST_PRINTL,0,$2,$1,0,0,yylineno); } 
 	|			{ $$ = 0; }
 	;
 	
