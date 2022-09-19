@@ -6,6 +6,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 #include <stdlib.h>
 #include "hash.h"
 #include "ast.h"
+#include "tacs.h"
 
 extern FILE *yyin;
 int yyparse();

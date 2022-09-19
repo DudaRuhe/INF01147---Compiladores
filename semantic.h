@@ -8,6 +8,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 
 #include "ast.h"
 #include "hash.h"
+#include "tacs.h"
 
 extern int semanticerrors;
 
@@ -17,13 +18,7 @@ void check_undeclared();
 
 void check_operands();
 
-int check_vector(AST *node, int datatype);
-
 int is_number(AST *node, int datatype);
-
-void check_boolean(AST *node);
-
-void check_print(AST *node);
 
 void check_commands(AST *node);
 

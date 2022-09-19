@@ -4,6 +4,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 
 
 #include "semantic.h"
+#include "tacs.h"
 
 
 int semanticerrors=0;
@@ -33,10 +34,6 @@ void check_and_set_declarations (AST *node)
 			if(node->son[0])
 			  if(node->son[0]->type == AST_CHAR)
 			  node->symbol->datatype = DATATYPE_CHAR;
-			if(!is_number(node->son[1], node->symbol->datatype)){
-			fprintf(stderr, "[Line %d] Semantic ERROR: Variable 2 %s \n",node->line, node->symbol->text);
-			++ semanticerrors;	
-			} 
 			break;
 		case AST_FUNCAO: 
 		      if (node->symbol)
@@ -74,11 +71,6 @@ void check_and_set_declarations (AST *node)
 			if(node->son[0])
 			  if(node->son[0]->type == AST_CHAR)
 			  node->symbol->datatype = DATATYPE_CHAR;
-			if(!check_vector(node->son[2], node->symbol->datatype))
-			{
-			fprintf(stderr, "[Line %d] Semantic ERROR: VECTOR 2 %s \n",node->line, node->symbol->text);
-			++ semanticerrors;	
-			} 	
 			
 		break;
 		case AST_FUNATR: 
@@ -106,15 +98,6 @@ void check_and_set_declarations (AST *node)
 		check_and_set_declarations (node->son[i]);
 
 			
-}
-
-int check_vector(AST *node, int datatype){
-	if(!node)
-		return 1;
-	if(node->type == AST_SYMBOLL)
-		return check_vector(node->son[0], datatype) && check_vector(node->son[1], datatype);
-	if(!is_number(node,datatype))
-		return 0;
 }
 
 void check_undeclared()
@@ -173,10 +156,9 @@ if(	(son->type == AST_ADD ||
 				son->symbol->datatype == DATATYPE_FLOAT && son->symbol->type == SYMBOL_VECTOR && is_number(son->son[0],0) )
 			))
 		return 1;
-else return 0;
+else fprintf(stderr,"datatype = %d\n",datatype); return 0;
 }
 }
-
 
 void check_commands(AST *node){
 	int i;
@@ -200,8 +182,7 @@ void check_commands(AST *node){
 				}
 			}
 			 break;
-		case AST_PRINT: check_print(node->son[0]);
-
+		case AST_RETURN: // tipo mesmo de função
 			break;
 		
 		case AST_ATTR:
@@ -223,42 +204,15 @@ void check_commands(AST *node){
 			check_operands(node->son[1],node->symbol->datatype);	
 			break;
 		case AST_IF: 
-			check_boolean(node->son[0]); break;
-		case AST_IFELSE: check_boolean(node->son[0]); break;
-		case AST_WHILE:  check_boolean(node->son[0]); break;
+			check_operands(node->son[1],node->symbol->datatype); break;
+		case AST_IFELSE: break;
+		case AST_WHILE: break;
 		
 	}
 for (i=0; i<MAXSON; i++)
 		check_commands(node->son[i]);
 
 }
-
-void check_print(AST *node){
-	if(!node)
-		return;
-	if(node->son[1] != 0){
-		check_operands(node->son[1], DATATYPE_BOOL);
-}
-	check_print(node->son[0]);
-	
-}
-void check_boolean(AST *node){
-	switch (node->type)
-	{
-		case AST_ADD:
-		case AST_SUB:
-		case AST_SYMBOL:
-		case AST_VECTOR:
-		case AST_MULT:
-		case AST_DIV:
-			fprintf(stderr, "[Line %d] Semantic ERROR: Invalid BOOLEANS Operands  \n", node->line);
-			++ semanticerrors;
-			break;
-		default:
-			check_operands(node, DATATYPE_BOOL);
-	}
-}
-
 void check_operands(AST *node, int datatype)
 {
 	int i;

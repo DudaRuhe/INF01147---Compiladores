@@ -7,7 +7,9 @@ Tatiana Pacheco de Almeida - 00252861 */
 %{
    #include "hash.h"
    #include "ast.h"
+   #include "tacs.h"
    #include "y.tab.h"
+  
   
 	
     int line = 1;

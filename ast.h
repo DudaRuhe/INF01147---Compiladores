@@ -3,6 +3,7 @@ Maria Eduarda Nothen Ruhe - 00287686
 Tatiana Pacheco de Almeida - 00252861 */
 
 #include "hash.h"
+#include "tacs.h"
 #include <stdio.h>
 #include <stdlib.h>
 

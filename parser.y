@@ -7,9 +7,12 @@ Tatiana Pacheco de Almeida - 00252861 */
 %{
 #include "hash.h"
 #include "ast.h"
+#include "tacs.h"
 #include "semantic.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+
 
 int yylex(void);
 void yyerror (char const *s);
@@ -88,12 +91,16 @@ AST *astRoot;
 
 %%
 
-begin: programa {astRoot = $1; ast_print($1,0);
+begin: programa {astRoot = $1; 
+		TAC * code;
+		ast_print($1,0);
 		check_and_set_declarations($1);
 		check_undeclared();
 		check_commands($1);
-		if(get_semantic_erros()>0)
-			exit(4);
+		code = generate_code($1);
+		print_tac_back(code);	
+		code = tac_reverse(code);
+		generate_asm(code);	
 		}
 
 
@@ -138,7 +145,7 @@ comando:  command_print  	{$$ = $1; }
       	 ;
 
 lista_print: LIT_STRING lista_print { $$ = astCreat(AST_PRINTL,$1,$2,0,0,0,yylineno); } 
-	| expressao lista_print { $$ = astCreat(AST_PRINTL,0,$2,$1,0,0,yylineno); } 
+	| expressao lista_print { $$ = astCreat(AST_PRINTL,0,$1,$2,0,0,yylineno); } 
 	|			{ $$ = 0; }
 	;
 	

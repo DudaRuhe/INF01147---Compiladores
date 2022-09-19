@@ -3,6 +3,7 @@ Maria Eduarda Nothen Ruhe - 00287686
 Tatiana Pacheco de Almeida - 00252861 */
 
 #include "hash.h"
+#include "tacs.h"
 
 HASH_NODE*Table[HASH_SIZE];
 
@@ -73,5 +74,33 @@ int i;
 			++ undeclared;
 			}
 	return undeclared;
+}
+
+HASH_NODE* make_temp(void)
+{
+	static int serial = 0;
+	char buffer[256] = "";
+	sprintf(buffer, "My_temp: %d", serial++);
+	return hashInsert(buffer, SYMBOL_VARIABLE);
+}
+
+HASH_NODE* make__label(void)
+{
+	static int serial = 0;
+	char buffer[256] = "";
+	sprintf(buffer, "My_label: %d", serial++);
+	return hashInsert(buffer, SYMBOL_LABEL);
+}
+
+void print_ams(FILE *fout)
+{
+	int i;
+	HASH_NODE *node;
+	fprintf(fout, "## DATA_SECTION \n"
+	"\t .section	.rodata \n");
+	for (i=0;i<HASH_SIZE;++i)
+		for (node=Table[i]; node; node=node->next)
+			if (node->type == SYMBOL_VARIABLE)
+			fprintf(fout, "%s: \t .long \t0 \n",node->text);
 }
 
