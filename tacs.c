@@ -35,6 +35,9 @@ switch(tac->type)
 	case TAC_LE: fprintf(stderr, "TAC_LE"); break;
 	case TAC_GE: fprintf(stderr, "TAC_GE"); break;
 	case TAC_GREATER: fprintf(stderr, "TAC_GREATER"); break;
+	case TAC_PRINT: fprintf(stderr, "TAC_PRINT"); break;
+	case TAC_PRINTLIST: fprintf(stderr, "TAC_PRINTLIST"); break;
+	case TAC_RETURN: fprintf(stderr, "TAC_RETURN"); break;
 	
 	default: fprintf(stderr, "TAC_UNKNOWN"); break;
 }
@@ -118,6 +121,18 @@ labeltac2 = tacCreate(TAC_LABEL, newlabel2, 0,0);
 return tacJoin(tacJoin(tacJoin(labeltac2,jumpfalse), jumptac),labeltac);
 }
 
+TAC* makePrint(HASH_NODE* res, TAC* l1, TAC* l2){
+TAC* symbol = 0;
+if(res){
+symbol = tacCreate(TAC_SYMBOL,res,0,0);
+ symbol->prev = l1;
+ return tacJoin( tacJoin(symbol, l2), tacCreate(TAC_PRINTLIST,makeTemp(), symbol->res, l1?l1->res:0));
+}
+ return tacJoin( tacJoin(l1, l2) ,tacCreate(TAC_PRINTLIST, makeTemp(), l1?l1->res:0, l2?l2->res:0));
+
+
+}
+
 TAC* generate(AST* node){
 	int i;
 	TAC* result = 0;
@@ -146,9 +161,15 @@ TAC* generate(AST* node){
 	case AST_DIF: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_DIF, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_LE: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_LE, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_GE: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_GE, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
+	//Fluxo
 	case AST_IF: result = makeIfThen(code[0],code[1]); break;
 	case AST_IFELSE: result = makeIfElse(code[0],code[1],code[2]); break;
 	case AST_WHILE: result = makeWhile(code[0], code[1]); break;
+	//Comandos
+	//case AST_READ:  result = 
+	case AST_PRINTL: result = makePrint(node->symbol?node->symbol:0, code[0]?code[0]:0, code[1]?code[1]:0); break;
+	case AST_PRINT: result = tacJoin(code[0], tacCreate(TAC_PRINT,code[0]?code[0]->res:0,0,0)); break;
+	case AST_RETURN: result = tacJoin(code[0], tacCreate(TAC_RETURN,code[0]?code[0]->res:0,0,0)); break;
 	default: result = tacJoin(code[0], tacJoin(code[1], tacJoin(code[2],code[3])));
 	break;
 }

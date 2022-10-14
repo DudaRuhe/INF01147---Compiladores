@@ -154,7 +154,7 @@ command_read: KW_READ TK_IDENTIFIER { $$ = astCreat(AST_READ,$2,0,0,0,0,yylineno
 command_return: KW_RETURN expressao { $$ = astCreat(AST_RETURN,0,$2,0,0,0,yylineno);} 
 	;
 
-command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,$6,$3,0,0,yylineno);} 
+command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,$3,$6,0,0,yylineno);} 
 	| TK_IDENTIFIER ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,0,$3,0,0,yylineno);}   		
 	;
 

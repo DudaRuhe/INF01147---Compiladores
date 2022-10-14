@@ -27,6 +27,9 @@ Tatiana Pacheco de Almeida - 00252861 */
 #define TAC_LE 17
 #define TAC_GE 18
 #define TAC_GREATER 19
+#define TAC_PRINT 20
+#define TAC_PRINTLIST 21
+#define TAC_RETURN 22
 #define  MAX_SONS 4
 typedef struct tac_node
 {
@@ -46,4 +49,5 @@ TAC* generate(AST* node);
 TAC* makeIfThen(TAC* l1, TAC* l2);
 TAC* makeIfElse(TAC* l1, TAC* l2, TAC* l3);
 TAC* makeWhile(TAC* l1, TAC* l2);
+TAC* makePrint(HASH_NODE* res, TAC* l1, TAC* l2);  
 #endif

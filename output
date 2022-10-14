@@ -1,11 +1,6 @@
 int a ( 1 );
+int b[ 3 ];
 int fun(){
-while( a < 5 )
-{
-a[ 6 ] <-;
-if( a < 4 )
-a[ 11 ] <-;
-}
-;
-a[ 11 ] <-;
+print "oi";
+return a + b[ 2 ]- 4 ;
 }
