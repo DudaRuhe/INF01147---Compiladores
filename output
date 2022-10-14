@@ -1,6 +1,14 @@
 int a ( 1 );
 int b[ 3 ];
 int fun(){
-print "oi";
-return a + b[ 2 ]- 4 ;
+if( a < 6 )
+{
+a[ 6 ] <-}
+else
+{
+a[ 9 ] <-;
+a[ 8 ] <-;
+}
+;
+read a;
 }

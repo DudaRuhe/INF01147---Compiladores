@@ -38,7 +38,12 @@ switch(tac->type)
 	case TAC_PRINT: fprintf(stderr, "TAC_PRINT"); break;
 	case TAC_PRINTLIST: fprintf(stderr, "TAC_PRINTLIST"); break;
 	case TAC_RETURN: fprintf(stderr, "TAC_RETURN"); break;
-	
+	case TAC_READ: fprintf(stderr, "TAC_READ"); break;
+	case TAC_VECTOR: fprintf(stderr, "TAC_VECTOR"); break;
+	case TAC_FUNIN: fprintf(stderr, "TAC_FUNIN"); break;
+	case TAC_FUNEND: fprintf(stderr, "TAC_FUNEND"); break;
+	case TAC_ATTR: fprintf(stderr, "TAC_ATTR"); break;
+
 	default: fprintf(stderr, "TAC_UNKNOWN"); break;
 }
 fprintf(stderr,", %s", (tac->res)?tac->res->text:"0" );
@@ -97,7 +102,7 @@ jumptac = tacCreate(TAC_JMP, newlabel2, 0,0);
 jumptac->prev = l2? l2:0;
 labeltac = tacCreate(TAC_LABEL, newlabel,0,0);
 labeltac2 = tacCreate(TAC_LABEL, newlabel2, 0,0);
-
+labeltac2->prev = l3?l3:0;
 return tacJoin(tacJoin(tacJoin(jumpfalse,jumptac),labeltac), labeltac2);
 
 }
@@ -125,13 +130,25 @@ TAC* makePrint(HASH_NODE* res, TAC* l1, TAC* l2){
 TAC* symbol = 0;
 if(res){
 symbol = tacCreate(TAC_SYMBOL,res,0,0);
- symbol->prev = l1;
+ symbol->prev = l1? l1:0;
  return tacJoin( tacJoin(symbol, l2), tacCreate(TAC_PRINTLIST,makeTemp(), symbol->res, l1?l1->res:0));
 }
  return tacJoin( tacJoin(l1, l2) ,tacCreate(TAC_PRINTLIST, makeTemp(), l1?l1->res:0, l2?l2->res:0));
 
 
 }
+
+TAC* makeFun(HASH_NODE* res,TAC* l1, TAC* l2){
+
+TAC* finicio = 0;
+TAC* ffinal = 0;
+
+finicio = tacCreate(TAC_FUNIN, res, l1?l1->res:0,0);
+
+ffinal = tacCreate(TAC_FUNEND, res, 0,0);
+
+return  tacJoin (tacJoin( tacJoin(l1,finicio), l2), ffinal) ;
+} 
 
 TAC* generate(AST* node){
 	int i;
@@ -145,12 +162,13 @@ TAC* generate(AST* node){
 
 	switch(node->type){
 	case AST_SYMBOL: result = tacCreate(TAC_SYMBOL,node->symbol,0,0); break;
+	case AST_VECTOR: result = tacCreate(TAC_VECTOR,node->symbol,code[0]?code[0]->res:0,0); break;
 	//ARITMETICAS
 	case AST_ADD: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_ADD, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_SUB: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_SUB, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_MULT: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_MULT, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_DIV: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_DIV, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
-	case AST_ATTR: result = tacJoin(code[1], tacCreate(TAC_COPY,node->symbol,code[1]?code[1]->res:0,0)); break;
+	case AST_ATTR: result = tacJoin(code[1], tacCreate(TAC_COPY,node->symbol,code[1]?code[1]->res:0,code[0]?code[0]->res:0)); break;
 	//BOOL
 	case AST_GREATER: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_GREATER, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_LESS: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_LESS, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
@@ -161,15 +179,18 @@ TAC* generate(AST* node){
 	case AST_DIF: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_DIF, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_LE: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_LE, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_GE: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_GE, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
-	//Fluxo
+	//FLUXO
 	case AST_IF: result = makeIfThen(code[0],code[1]); break;
 	case AST_IFELSE: result = makeIfElse(code[0],code[1],code[2]); break;
 	case AST_WHILE: result = makeWhile(code[0], code[1]); break;
-	//Comandos
-	//case AST_READ:  result = 
+	//COMANDOS
+	case AST_READ:  result = tacJoin(code[0], tacCreate(TAC_READ,node->symbol,code[0]?code[0]->res:0,0)); break;  
 	case AST_PRINTL: result = makePrint(node->symbol?node->symbol:0, code[0]?code[0]:0, code[1]?code[1]:0); break;
 	case AST_PRINT: result = tacJoin(code[0], tacCreate(TAC_PRINT,code[0]?code[0]->res:0,0,0)); break;
 	case AST_RETURN: result = tacJoin(code[0], tacCreate(TAC_RETURN,code[0]?code[0]->res:0,0,0)); break;
+	//INICIO E FIM DE FUNÇÂO
+	case AST_FUNCAO: result = makeFun(node->symbol,code[1], code[2]); break;
+	case AST_FUNATR: result = tacJoin(tacCreate(TAC_ATTR,node->symbol,0,0), code[1]); break;
 	default: result = tacJoin(code[0], tacJoin(code[1], tacJoin(code[2],code[3])));
 	break;
 }

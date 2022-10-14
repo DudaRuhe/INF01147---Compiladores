@@ -30,7 +30,14 @@ Tatiana Pacheco de Almeida - 00252861 */
 #define TAC_PRINT 20
 #define TAC_PRINTLIST 21
 #define TAC_RETURN 22
+#define TAC_READ 23
+#define TAC_VECTOR 24
+#define TAC_FUNIN 25
+#define TAC_FUNEND 26
+#define TAC_ATTR 27
+
 #define  MAX_SONS 4
+
 typedef struct tac_node
 {
 	int type;
@@ -49,5 +56,6 @@ TAC* generate(AST* node);
 TAC* makeIfThen(TAC* l1, TAC* l2);
 TAC* makeIfElse(TAC* l1, TAC* l2, TAC* l3);
 TAC* makeWhile(TAC* l1, TAC* l2);
-TAC* makePrint(HASH_NODE* res, TAC* l1, TAC* l2);  
+TAC* makePrint(HASH_NODE* res, TAC* l1, TAC* l2); 
+TAC* makeFun(HASH_NODE* res,TAC* l1, TAC* l2); 
 #endif
