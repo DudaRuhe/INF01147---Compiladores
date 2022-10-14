@@ -18,6 +18,15 @@ Tatiana Pacheco de Almeida - 00252861 */
 #define TAC_JF 8
 #define TAC_LABEL 9
 #define TAC_JMP 10
+#define TAC_LESS 11
+#define TAC_OR 12
+#define TAC_NEG 13
+#define TAC_AND 14
+#define TAC_EQ 15
+#define TAC_DIF 16
+#define TAC_LE 17
+#define TAC_GE 18
+#define TAC_GREATER 19
 #define  MAX_SONS 4
 typedef struct tac_node
 {
@@ -36,4 +45,5 @@ TAC* tacJoin(TAC* l1, TAC* l2);
 TAC* generate(AST* node);
 TAC* makeIfThen(TAC* l1, TAC* l2);
 TAC* makeIfElse(TAC* l1, TAC* l2, TAC* l3);
+TAC* makeWhile(TAC* l1, TAC* l2);
 #endif

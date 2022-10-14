@@ -26,6 +26,16 @@ switch(tac->type)
 	case TAC_LABEL: fprintf(stderr, "TAC_LABEL"); break;
 	case TAC_IF: fprintf(stderr, "TAC_IF"); break;
 	case TAC_JMP: fprintf(stderr, "TAC_JMP"); break;
+	case TAC_LESS: fprintf(stderr, "TAC_LESS"); break;
+	case TAC_OR: fprintf(stderr, "TAC_OR"); break;
+	case TAC_NEG: fprintf(stderr, "TAC_NEG"); break;
+	case TAC_AND: fprintf(stderr, "TAC_AND"); break;
+	case TAC_EQ: fprintf(stderr, "TAC_EQ"); break;
+	case TAC_DIF: fprintf(stderr, "TAC_DIF"); break;
+	case TAC_LE: fprintf(stderr, "TAC_LE"); break;
+	case TAC_GE: fprintf(stderr, "TAC_GE"); break;
+	case TAC_GREATER: fprintf(stderr, "TAC_GREATER"); break;
+	
 	default: fprintf(stderr, "TAC_UNKNOWN"); break;
 }
 fprintf(stderr,", %s", (tac->res)?tac->res->text:"0" );
@@ -79,15 +89,33 @@ newlabel = makeLabel();
 newlabel2 = makeLabel();
 
 jumpfalse = tacCreate(TAC_JF, newlabel,l1?l1->res:0,0);
-jumpfalse->prev = l1;
+jumpfalse->prev = l1? l1:0;
 jumptac = tacCreate(TAC_JMP, newlabel2, 0,0);
 jumptac->prev = l2? l2:0;
 labeltac = tacCreate(TAC_LABEL, newlabel,0,0);
-labeltac->next = l3;
 labeltac2 = tacCreate(TAC_LABEL, newlabel2, 0,0);
-labeltac2->prev = l3;
+
 return tacJoin(tacJoin(tacJoin(jumpfalse,jumptac),labeltac), labeltac2);
 
+}
+
+TAC* makeWhile(TAC* l1, TAC* l2){
+TAC* jumptac = 0;
+TAC* jumpfalse = 0;
+TAC* labeltac = 0;
+TAC* labeltac2 = 0;
+HASH_NODE* newlabel = 0;
+HASH_NODE* newlabel2 = 0;
+newlabel = makeLabel();
+newlabel2 = makeLabel();
+
+jumpfalse = tacCreate(TAC_JF, newlabel,l1?l1->res:0,0);
+jumpfalse->prev = l1? l1:0;
+jumptac = tacCreate(TAC_JMP, newlabel2, 0,0);
+jumptac->prev = l2? l2:0;
+labeltac = tacCreate(TAC_LABEL, newlabel,0,0);
+labeltac2 = tacCreate(TAC_LABEL, newlabel2, 0,0);
+return tacJoin(tacJoin(tacJoin(labeltac2,jumpfalse), jumptac),labeltac);
 }
 
 TAC* generate(AST* node){
@@ -102,14 +130,25 @@ TAC* generate(AST* node){
 
 	switch(node->type){
 	case AST_SYMBOL: result = tacCreate(TAC_SYMBOL,node->symbol,0,0); break;
+	//ARITMETICAS
 	case AST_ADD: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_ADD, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_SUB: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_SUB, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_MULT: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_MULT, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_DIV: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_DIV, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_ATTR: result = tacJoin(code[1], tacCreate(TAC_COPY,node->symbol,code[1]?code[1]->res:0,0)); break;
-	
+	//BOOL
+	case AST_GREATER: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_GREATER, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
+	case AST_LESS: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_LESS, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
+	case AST_OR: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_OR, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
+	case AST_NEG: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_NEG, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
+	case AST_AND: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_AND, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
+	case AST_EQ: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_EQ, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
+	case AST_DIF: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_DIF, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
+	case AST_LE: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_LE, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
+	case AST_GE: result = tacJoin( tacJoin(code[0], code[1]) ,tacCreate(TAC_GE, makeTemp(), code[0]?code[0]->res:0, code[1]?code[1]->res:0)); break;
 	case AST_IF: result = makeIfThen(code[0],code[1]); break;
-	case AST_IFELSE: fprintf(stderr, "entrou\n"); result = makeIfElse(code[0],code[1],code[2]); break;
+	case AST_IFELSE: result = makeIfElse(code[0],code[1],code[2]); break;
+	case AST_WHILE: result = makeWhile(code[0], code[1]); break;
 	default: result = tacJoin(code[0], tacJoin(code[1], tacJoin(code[2],code[3])));
 	break;
 }
