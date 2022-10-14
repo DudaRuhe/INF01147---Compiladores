@@ -33,7 +33,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 #define SYMBOL_VARIABLE 21
 #define SYMBOL_FUNCTION 22
 #define SYMBOL_VECTOR 23
-
+#define SYMBOL_LABEL 24
 #define DATATYPE_INT 1
 #define DATATYPE_CHAR 2
 #define DATATYPE_FLOAT 3
@@ -53,6 +53,8 @@ int hashAddress(char *text);
 HASH_NODE *hashFind(char *text);
 HASH_NODE *hashInsert(char *text,int type);
 void hashPrint(void);
+HASH_NODE* makeTemp(void);
+HASH_NODE* makeLabel(void);
 int hash_check_undeclared(void);
 
 #endif

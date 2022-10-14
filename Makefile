@@ -1,8 +1,8 @@
 # Maria Eduarda Nothen Ruhe - 00287686
 # Tatiana Pacheco de Almeida - 00252861
 
-etapa4: main.o lex.yy.o y.tab.o hash.o ast.o semantic.o
-	gcc main.o lex.yy.o y.tab.o hash.o ast.c semantic.o -o etapa4
+etapa5: main.o lex.yy.o y.tab.o hash.o ast.o semantic.o tacs.o
+	gcc main.o lex.yy.o y.tab.o hash.o ast.c semantic.o tacs.o -o etapa5
 
 main.o: main.c
 	gcc -c main.c
@@ -12,6 +12,9 @@ semantic.o: semantic.c
 
 hash.o: hash.c
 	gcc -c hash.c
+
+tacs.o: tacs.c
+	gcc -c tacs.c
 
 ast.o: ast.c
 	gcc -c ast.c
@@ -29,4 +32,4 @@ lex.yy.c: scanner.l
 	lex scanner.l
 
 clean:
-	rm etapa4 lex.yy.c y.tab.c *.o
+	rm etapa5 lex.yy.c y.tab.c *.o

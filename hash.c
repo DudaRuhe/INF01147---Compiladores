@@ -74,4 +74,24 @@ int i;
 			}
 	return undeclared;
 }
+HASH_NODE* makeTemp(void){
+
+static int serial =0;
+char buffer[256] = "";
+
+sprintf(buffer, "MYTEMPIS_%d",serial++);
+return hashInsert(buffer, SYMBOL_VARIABLE);
+
+
+}
+
+HASH_NODE* makeLabel(void){
+
+static int serial =0;
+char buffer[256] = "";
+
+sprintf(buffer, "MYLABELIS_%d",serial++);
+return hashInsert(buffer, SYMBOL_LABEL);
+
+}
 
