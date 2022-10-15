@@ -8,6 +8,7 @@ Tatiana Pacheco de Almeida - 00252861 */
 #include "hash.h"
 #include "ast.h"
 #include "semantic.h"
+#include "tacs.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -86,14 +87,20 @@ AST *astRoot;
 %left '.' '/'  
 %left '~'
 
-%%
+%% 
 
-begin: programa {astRoot = $1; ast_print($1,0);
+begin: programa {astRoot = $1; 
+ 		TAC * code;
+		ast_print($1,0);
 		check_and_set_declarations($1);
 		check_undeclared();
 		check_commands($1);
 		if(get_semantic_erros()>0)
 			exit(4);
+		code = generate_code($1);
+		tacPrintBackwards(generate($1));
+		code = tac_reverse(code);
+		generate_asm(code);			
 		}
 
 
@@ -138,7 +145,7 @@ comando:  command_print  	{$$ = $1; }
       	 ;
 
 lista_print: LIT_STRING lista_print { $$ = astCreat(AST_PRINTL,$1,$2,0,0,0,yylineno); } 
-	| expressao lista_print { $$ = astCreat(AST_PRINTL,0,$2,$1,0,0,yylineno); } 
+	| expressao lista_print { $$ = astCreat(AST_PRINTL,0,$1,$2,0,0,yylineno); } 
 	|			{ $$ = 0; }
 	;
 	
@@ -152,7 +159,7 @@ command_read: KW_READ TK_IDENTIFIER { $$ = astCreat(AST_READ,$2,0,0,0,0,yylineno
 command_return: KW_RETURN expressao { $$ = astCreat(AST_RETURN,0,$2,0,0,0,yylineno);} 
 	;
 
-command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,$6,$3,0,0,yylineno);} 
+command_atribuicao: TK_IDENTIFIER'['expressao']' ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,$3,$6,0,0,yylineno);} 
 	| TK_IDENTIFIER ASSIGNMENT expressao { $$ = astCreat(AST_ATTR,$1,0,$3,0,0,yylineno);}   		
 	;
 
@@ -186,7 +193,9 @@ fluxo:  KW_IF '(' expressao ')' comando			{ $$ = astCreat(AST_IF,0,$3,$5,0,0,yyl
 
 /* Expressoes Aritmeticas*/
   
-expressao: TK_IDENTIFIER		{$$ = astCreat(AST_SYMBOL,$1,0,0,0,0,yylineno); }
+expressao: TK_IDENTIFIER		{$$ = astCreat(AST_SYMBOL,$1,0,0,0,0,yylineno);
+						printTAC(tacCreate(TAC_SYMBOL, $1,0,0));
+						 }
     | TK_IDENTIFIER '[' expressao ']'   {$$ = astCreat(AST_VECTOR,$1,$3,0,0,0,yylineno); }
     | LIT_INTEGER 			{$$ = astCreat(AST_SYMBOL,$1,0,0,0,0,yylineno); }		
     | LIT_CHAR 				{$$ = astCreat(AST_SYMBOL,$1,0,0,0,0,yylineno); }

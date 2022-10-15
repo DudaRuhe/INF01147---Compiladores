@@ -1,5 +1,6 @@
-float a ( 2 );
-int b[ 10 ];
+int a ( 1 );
+int b[ 3 ];
 int fun(){
-a[( 2,4 + 4,5 )-( 3,5 )] <-;
+print "oi";
+return a + b[ 2 ]- 4 ;
 }

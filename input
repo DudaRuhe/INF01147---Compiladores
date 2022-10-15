@@ -1,8 +1,10 @@
-
+int a (1) ;
+int b[3];
 int fun(){
-print "asdsad";
-print 2+4;
-print 1+3 "asdasd";
-print 4,5-3;
+print "oi";
+return a+b[2] - 4;
 }
+
+
+
 
